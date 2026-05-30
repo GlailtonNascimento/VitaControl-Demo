@@ -1,0 +1,5 @@
+com/vitacontrol/demo/repository/MedicaoPressaoRepository.class
+com/vitacontrol/demo/VitaControlDemoApplication.class
+com/vitacontrol/demo/controller/HealthController.class
+com/vitacontrol/demo/controller/MedicaoController.class
+com/vitacontrol/demo/model/MedicaoPressao.class

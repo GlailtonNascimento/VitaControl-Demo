@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-
+ 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class MedicaoController {
