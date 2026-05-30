@@ -1,12 +1,14 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { CadastroMedicao } from './components/cadastro-medicao/cadastro-medicao';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [CadastroMedicao],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('VitaControl-Web');
+export class AppComponent {
+  title = 'VitaControl-Web';
 }
+
