@@ -1,5 +1,15 @@
+com/vitacontrol/demo/model/Usuario.class
+com/vitacontrol/demo/security/ApplicationConfig.class
+com/vitacontrol/demo/security/JwtTokenProvider.class
 com/vitacontrol/demo/repository/MedicaoPressaoRepository.class
+com/vitacontrol/demo/security/LoginRequest.class
 com/vitacontrol/demo/VitaControlDemoApplication.class
-com/vitacontrol/demo/controller/HealthController.class
+com/vitacontrol/demo/security/JwtAuthenticationFilter.class
 com/vitacontrol/demo/controller/MedicaoController.class
 com/vitacontrol/demo/model/MedicaoPressao.class
+com/vitacontrol/demo/security/RegistoRequest.class
+com/vitacontrol/demo/security/SecurityConfig.class
+com/vitacontrol/demo/controller/HealthController.class
+com/vitacontrol/demo/repository/UsuarioRepository.class
+com/vitacontrol/demo/security/AuthController.class
+com/vitacontrol/demo/security/AuthenticationResponse.class

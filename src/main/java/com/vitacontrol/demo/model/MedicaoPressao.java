@@ -12,7 +12,11 @@ public class MedicaoPressao {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private Long usuarioId;
+    // Relacionamento forte para isolamento rigoroso de escopo por usuário autenticado
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
     private LocalDateTime dataHora;
     private Short sistolica;
     private Short diastolica;
@@ -21,8 +25,8 @@ public class MedicaoPressao {
 
     public MedicaoPressao() {}
 
-    public MedicaoPressao(Long usuarioId, LocalDateTime dataHora, Short sistolica, Short diastolica, Short pulsacao, String contexto) {
-        this.usuarioId = usuarioId;
+    public MedicaoPressao(Usuario usuario, LocalDateTime dataHora, Short sistolica, Short diastolica, Short pulsacao, String contexto) {
+        this.usuario = usuario;
         this.dataHora = dataHora;
         this.sistolica = sistolica;
         this.diastolica = diastolica;
@@ -33,16 +37,22 @@ public class MedicaoPressao {
     // Getters e Setters
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
-    public Long getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
+
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
     public LocalDateTime getDataHora() { return dataHora; }
     public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
+
     public Short getSistolica() { return sistolica; }
     public void setSistolica(Short sistolica) { this.sistolica = sistolica; }
+
     public Short getDiastolica() { return diastolica; }
     public void setDiastolica(Short diastolica) { this.diastolica = diastolica; }
+
     public Short getPulsacao() { return pulsacao; }
     public void setPulsacao(Short pulsacao) { this.pulsacao = pulsacao; }
+
     public String getContexto() { return contexto; }
     public void setContexto(String contexto) { this.contexto = contexto; }
 }

@@ -1,5 +1,12 @@
 /data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/model/MedicaoPressao.java
+/data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/security/JwtAuthenticationFilter.java
+/data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/security/AuthController.java
 /data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/VitaControlDemoApplication.java
 /data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/controller/HealthController.java
+/data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/security/SecurityConfig.java
+/data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/repository/UsuarioRepository.java
 /data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/controller/MedicaoController.java
 /data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/repository/MedicaoPressaoRepository.java
+/data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/security/ApplicationConfig.java
+/data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/security/JwtTokenProvider.java
+/data/data/com.termux/files/home/VitaControl-Demo/src/main/java/com/vitacontrol/demo/model/Usuario.java
