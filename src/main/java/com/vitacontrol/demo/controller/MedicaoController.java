@@ -1,16 +1,17 @@
 package com.vitacontrol.demo.controller;
 
+import com.vitacontrol.demo.dto.MedicaoRequestDTO;
 import com.vitacontrol.demo.model.MedicaoPressao;
 import com.vitacontrol.demo.model.Usuario;
 import com.vitacontrol.demo.repository.MedicaoPressaoRepository;
 import com.vitacontrol.demo.repository.UsuarioRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -20,13 +21,11 @@ public class MedicaoController {
     private final MedicaoPressaoRepository repository;
     private final UsuarioRepository usuarioRepository;
 
-    // Injeção via construtor (boas práticas)
     public MedicaoController(MedicaoPressaoRepository repository, UsuarioRepository usuarioRepository) {
         this.repository = repository;
         this.usuarioRepository = usuarioRepository;
     }
 
-    // Recupera o usuário autenticado no contexto de segurança do Spring/JWT
     private Usuario getUsuarioAutenticado() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return usuarioRepository.findByUsername(username)
@@ -34,25 +33,19 @@ public class MedicaoController {
     }
 
     @PostMapping("/medicoes")
-    public ResponseEntity<?> salvar(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<?> salvar(@Valid @RequestBody MedicaoRequestDTO dto) {
         try {
             Usuario usuarioLogado = getUsuarioAutenticado();
-
-            Short sistolica = ((Number) payload.get("sistolica")).shortValue();
-            Short diastolica = ((Number) payload.get("diastolica")).shortValue();
-            Short pulsacao = payload.get("pulsacao") != null ?
-                ((Number) payload.get("pulsacao")).shortValue() : null;
-            String contexto = (String) payload.get("contexto");
             LocalDateTime dataHora = LocalDateTime.now();
 
-            // Instancia a medição atrelando o objeto físico do Usuário logado
+            // Mapeia os dados validados do DTO diretamente para a Entidade física
             MedicaoPressao medicao = new MedicaoPressao(
                     usuarioLogado,
                     dataHora,
-                    sistolica,
-                    diastolica,
-                    pulsacao,
-                    contexto
+                    dto.getSistolica(),
+                    dto.getDiastolica(),
+                    dto.getPulsacao(),
+                    dto.getContexto()
             );
 
             repository.save(medicao);
@@ -66,8 +59,6 @@ public class MedicaoController {
     public ResponseEntity<?> listarTodas() {
         try {
             Usuario usuarioLogado = getUsuarioAutenticado();
-            
-            // Retorna estritamente as medições do escopo do usuário autenticado
             return ResponseEntity.ok(repository.findByUsuarioOrderByDataHoraDesc(usuarioLogado));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
