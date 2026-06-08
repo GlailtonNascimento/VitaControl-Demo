@@ -34,3 +34,4 @@ bin/
 
 # Ignorar pacotes baixados do Ngrok na raiz
 ngrok-v3-stable-linux-arm64.tgz*
+target/
