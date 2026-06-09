@@ -27,9 +27,14 @@ public class SecurityConfig {
             // Desativa CSRF pois tokens JWT são nativamente protegidos contra isso em APIs Stateless
             .csrf(csrf -> csrf.disable())
             
-            // Define regras de autorização de rotas
+             // Define regras de autorização de rotas
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll() // Endpoints de login e registo são públicos
+                .requestMatchers(
+                    "/auth/**",
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html"
+                ).permitAll() // Endpoints de login, registo e Swagger são públicos
                 .anyRequest().authenticated()            // Qualquer outra rota exige o Token JWT
             )
             

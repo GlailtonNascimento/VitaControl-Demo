@@ -1,6 +1,7 @@
 package com.vitacontrol.demo.controller;
 
 import com.vitacontrol.demo.dto.MedicaoRequestDTO;
+import com.vitacontrol.demo.dto.DashboardResponseDTO;
 import com.vitacontrol.demo.model.MedicaoPressao;
 import com.vitacontrol.demo.model.Usuario;
 import com.vitacontrol.demo.repository.MedicaoPressaoRepository;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -38,7 +40,6 @@ public class MedicaoController {
             Usuario usuarioLogado = getUsuarioAutenticado();
             LocalDateTime dataHora = LocalDateTime.now();
 
-            // Mapeia os dados validados do DTO diretamente para a Entidade física
             MedicaoPressao medicao = new MedicaoPressao(
                     usuarioLogado,
                     dataHora,
@@ -63,6 +64,49 @@ public class MedicaoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao buscar medições: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/medicoes/dashboard")
+    public ResponseEntity<?> obterDashboard() {
+        try {
+            Usuario usuarioLogado = getUsuarioAutenticado();
+            List<MedicaoPressao> medicoes = repository.findByUsuarioOrderByDataHoraDesc(usuarioLogado);
+
+            if (medicoes.isEmpty()) {
+                return ResponseEntity.ok(new DashboardResponseDTO(0, 0, 0, 0, "Sem medições registradas"));
+            }
+
+            long total = medicoes.size();
+            
+            // Calcula as médias aritméticas
+            double mediaSis = medicoes.stream().mapToInt(MedicaoPressao::getSistolica).average().orElse(0.0);
+            double mediaDia = medicoes.stream().mapToInt(MedicaoPressao::getDiastolica).average().orElse(0.0);
+            double mediaPul = medicoes.stream().mapToInt(MedicaoPressao::getPulsacao).average().orElse(0.0);
+
+            // Aplica a Regra de Negócio de Saúde baseado nas médias
+            String statusGeral;
+            if (mediaSis >= 140 || mediaDia >= 90) {
+                statusGeral = "Hipertensão";
+            } else if (mediaSis >= 120 || mediaDia >= 80) {
+                statusGeral = "Pré-hipertensão";
+            } else {
+                statusGeral = "Normal";
+            }
+
+            // Retorna o DTO estruturado e arredondado
+            DashboardResponseDTO dashboard = new DashboardResponseDTO(
+                    total,
+                    Math.round(mediaSis * 10.0) / 10.0,
+                    Math.round(mediaDia * 10.0) / 10.0,
+                    Math.round(mediaPul * 10.0) / 10.0,
+                    statusGeral
+            );
+
+            return ResponseEntity.ok(dashboard);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao gerar dashboard: " + e.getMessage());
         }
     }
 }
