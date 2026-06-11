@@ -8,14 +8,14 @@
 
     <form (ngSubmit)="executarLogin()">
       <div class="form-group">
-        <label for="email">E-mail Corporativo</label>
+        <label for="email">E-mail</label>
         <input 
           type="email" 
           id="email" 
           name="email" 
           [(ngModel)]="usuario.email" 
           required 
-          placeholder="seu.email@empresa.com">
+          placeholder="Digite seu E-mail:  ">
       </div>
 
       <div class="form-group">
@@ -33,7 +33,7 @@
     </form>
 
     <div class="register-link">
-      Não tem uma conta? <a routerLink="/registrar">Cadastre-se</a>
+      Não tem uma conta? <a routerLink="/registrar">Cadastra-se</a>
     </div>
   </div>
 </div>
