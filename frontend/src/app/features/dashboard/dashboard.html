@@ -1,0 +1,59 @@
+<div class="dashboard-container">
+  <header class="navbar">
+    <div class="nav-brand">VitaControl</div>
+    <nav class="nav-links">
+      <a routerLink="/dashboard" class="active">Painel</a>
+      <a routerLink="/medicoes">Nova Medição</a>
+      <button class="btn-logout" (click)="fazerLogout()">Sair</button>
+    </nav>
+  </header>
+
+  <main class="dashboard-content">
+    
+    <div class="loading" *ngIf="carregando && !mensagemErro">
+      <p>Carregando dados de saúde...</p>
+    </div>
+
+    <div class="alert-error" *ngIf="mensagemErro">
+      {{ mensagemErro }}
+    </div>
+
+    <div *ngIf="!carregando && dadosDashboard">
+      
+      <section class="welcome-section">
+        <h1>Olá! Aqui está o resumo do seu quadro de saúde.</h1>
+        <p>Dados consolidados com base nas suas últimas medições registradas.</p>
+      </section>
+
+      <div class="metrics-grid">
+        
+        <div class="card metric-card">
+          <div class="card-icon blood-pressure">❤️‍🔥</div>
+          <h3>Média de Pressão</h3>
+          <p class="metric-value">
+            {{ dadosDashboard.mediaSistolica ?? '--' }}/{{ dadosDashboard.mediaDiastolica ?? '--' }}
+          </p>
+          <span class="metric-unit">mmHg</span>
+        </div>
+
+        <div class="card metric-card">
+          <div class="card-icon heart-rate">💓</div>
+          <h3>Frequência Cardíaca</h3>
+          <p class="metric-value">{{ dadosDashboard.mediaFrequenciaCardiaca ?? '--' }}</p>
+          <span class="metric-unit">BPM</span>
+        </div>
+
+        <div class="card metric-card">
+          <div class="card-icon weight">⚖️</div>
+          <h3>Peso Médio</h3>
+          <p class="metric-value">{{ dadosDashboard.mediaPeso ?? '--' }}</p>
+          <span class="metric-unit">kg</span>
+        </div>
+
+      </div>
+
+      <section class="card diagnosis-card" [ngClass]="dadosDashboard.statusSaude?.toLowerCase() || 'normal'">
+        <div class="diagnosis-header">
+          <h2>Análise Médica Automatizada</h2>
+          <span class="badge">{{ dadosDashboard.statusSaude
+

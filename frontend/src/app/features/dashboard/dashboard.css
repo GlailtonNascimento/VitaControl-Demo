@@ -1,0 +1,205 @@
+/* Estrutura Geral */
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1e293b;
+}
+
+/* Barra de Navegação (Navbar) */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1e293b;
+  padding: 16px 40px;
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.nav-brand {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-links a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+  color: #ffffff;
+}
+
+.btn-logout {
+  background-color: transparent;
+  border: 1px solid #475569;
+  color: #f1f5f9;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  background-color: #ef4444;
+  border-color: #ef4444;
+}
+
+/* Área de Conteúdo */
+.dashboard-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.welcome-section {
+  margin-bottom: 32px;
+}
+
+.welcome-section h1 {
+  font-size: 26px;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+}
+
+.welcome-section p {
+  color: #64748b;
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Base Comum dos Cards */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+}
+
+/* Grade de Métricas */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.metric-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.card-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.metric-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1;
+}
+
+.metric-unit {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Card de Diagnóstico Médico */
+.diagnosis-card {
+  padding: 32px;
+  border-left: 6px solid #cbd5e1;
+}
+
+.diagnosis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.diagnosis-header h2 {
+  font-size: 18px;
+  margin: 0;
+  color: #0f172a;
+}
+
+.badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.diagnosis-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #334155;
+  margin: 0;
+}
+
+/* Estados Dinâmicos de Diagnóstico */
+.diagnosis-card.normal { border-left-color: #10b981; }
+.diagnosis-card.normal .badge { background-color: #d1fae5; color: #065f46; }
+
+.diagnosis-card.alerta { border-left-color: #f59e0b; }
+.diagnosis-card.alerta .badge { background-color: #fef3c7; color: #92400e; }
+
+.diagnosis-card.critico { border-left-color: #ef4444; }
+.diagnosis-card.critico .badge { background-color: #fee2e2; color: #991b1b; }
+
+/* Estados Auxiliares */
+.loading {
+  text-align: center;
+  padding: 60px 0;
+  color: #64748b;
+  font-size: 16px;
+}
+
+.alert-error {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #dc2626;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Responsividade Básica para Celulares */
+@media (max-width: 640px) {
+  .navbar { padding: 16px 20px; }
+  .dashboard-content { padding: 24px 16px; }
+  .diagnosis-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+

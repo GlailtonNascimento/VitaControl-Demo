@@ -1,0 +1,86 @@
+<div class="medicoes-container">
+  <header class="navbar">
+    <div class="nav-brand">VitaControl</div>
+    <nav class="nav-links">
+      <a routerLink="/dashboard">Painel</a>
+      <a routerLink="/medicoes" class="active">Nova Medição</a>
+      <button class="btn-logout" (click)="fazerLogout()">Sair</button>
+    </nav>
+  </header>
+
+  <main class="medicoes-content">
+    <div class="form-card">
+      <h2>Registrar Sinais Vitais</h2>
+      <p class="subtitle">Insira suas métricas atuais para análise do sistema</p>
+
+      <form [formGroup]="medicaoForm" (ngSubmit)="onSubmit()">
+        
+        <div class="alert-error" *ngIf="mensagemErro">
+          {{ mensagemErro }}
+        </div>
+        <div class="alert-success" *ngIf="mensagemSucesso">
+          {{ mensagemSucesso }}
+        </div>
+
+        <div class="form-grid">
+          
+          <div class="form-group">
+            <label for="pressaoSistolica">Pressão Sistólica (Máxima)</label>
+            <input 
+              type="number" 
+              id="pressaoSistolica" 
+              formControlName="pressaoSistolica" 
+              placeholder="Ex: 120"
+              [class.invalid]="medicaoForm.get('pressaoSistolica')?.invalid && medicaoForm.get('pressaoSistolica')?.touched"
+            />
+            <small class="unit-label">mmHg</small>
+          </div>
+
+          <div class="form-group">
+            <label for="pressaoDiastolica">Pressão Diastólica (Mínima)</label>
+            <input 
+              type="number" 
+              id="pressaoDiastolica" 
+              formControlName="pressaoDiastolica" 
+              placeholder="Ex: 80"
+              [class.invalid]="medicaoForm.get('pressaoDiastolica')?.invalid && medicaoForm.get('pressaoDiastolica')?.touched"
+            />
+            <small class="unit-label">mmHg</small>
+          </div>
+
+          <div class="form-group">
+            <label for="frequenciaCardiaca">Frequência Cardíaca</label>
+            <input 
+              type="number" 
+              id="frequenciaCardiaca" 
+              formControlName="frequenciaCardiaca" 
+              placeholder="Ex: 72"
+              [class.invalid]="medicaoForm.get('frequenciaCardiaca')?.invalid && medicaoForm.get('frequenciaCardiaca')?.touched"
+            />
+            <small class="unit-label">BPM</small>
+          </div>
+
+          <div class="form-group">
+            <label for="peso">Peso Corpóreo</label>
+            <input 
+              type="number" 
+              step="0.1"
+              id="peso" 
+              formControlName="peso" 
+              placeholder="Ex: 75.5"
+              [class.invalid]="medicaoForm.get('peso')?.invalid && medicaoForm.get('peso')?.touched"
+            />
+            <small class="unit-label">kg</small>
+          </div>
+
+        </div>
+
+        <button type="submit" [disabled]="medicaoForm.invalid || carregando">
+          {{ carregando ? 'Salvando Registro...' : 'Salvar Medição' }}
+        </button>
+
+      </form>
+    </div>
+  </main>
+</div>
+

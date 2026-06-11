@@ -1,0 +1,135 @@
+/* Força o container a ocupar a tela inteira e ter fundo claro */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #f4f6f9 !important; /* Cor clara de fundo */
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Cartão Branco Centralizado */
+.login-card {
+  background: #ffffff !important;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+/* Título Principal */
+.login-card h2 {
+  margin: 0 0 8px 0;
+  color: #1e293b !important;
+  font-size: 28px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* Subtítulo */
+.subtitle {
+  color: #64748b !important;
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 14px;
+}
+
+/* Organização dos Campos */
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569 !important;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #f8fafc !important;
+  color: #1e293b !important;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Validação Visual de Erro */
+.form-group input.invalid {
+  border-color: #ef4444;
+  background-color: #fef2f2 !important;
+}
+
+/* Alerta de Erro da API */
+.alert-error {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Botão Entrar */
+button {
+  width: 100%;
+  padding: 14px;
+  background-color: #2563eb;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 10px;
+}
+
+button:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+button:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Links do Rodapé */
+.auth-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: #64748b !important;
+}
+
+.auth-footer a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+

@@ -1,0 +1,74 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>VitaControl</h2>
+    <p class="subtitle">Crie sua conta de monitoramento</p>
+
+    <form [formGroup]="registrarForm" (ngSubmit)="onSubmit()">
+      
+      <div class="alert-error" *ngIf="mensagemErro">
+        {{ mensagemErro }}
+      </div>
+
+      <div class="alert-success" *ngIf="mensagemSucesso">
+        {{ mensagemSucesso }}
+      </div>
+
+      <div class="form-group">
+        <label for="nome">Nome Completo</label>
+        <input 
+          type="text" 
+          id="nome" 
+          formControlName="nome" 
+          placeholder="Digite seu nome"
+          [class.invalid]="registrarForm.get('nome')?.invalid && registrarForm.get('nome')?.touched"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="Ex: seuemail@provedor.com"
+          [class.invalid]="registrarForm.get('email')?.invalid && registrarForm.get('email')?.touched"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha (Mínimo 6 caracteres)</label>
+        <input 
+          type="password" 
+          id="senha" 
+          formControlName="senha" 
+          placeholder="Crie uma senha forte"
+          [class.invalid]="registrarForm.get('senha')?.invalid && registrarForm.get('senha')?.touched"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="confirmarSenha">Confirme a Senha</label>
+        <input 
+          type="password" 
+          id="confirmarSenha" 
+          formControlName="confirmarSenha" 
+          placeholder="Digite a senha novamente"
+          [class.invalid]="(registrarForm.get('confirmarSenha')?.touched || registrarForm.touched) && registrarForm.errors?.['naoCoincide']"
+        />
+        <small class="error-text" *ngIf="(registrarForm.get('confirmarSenha')?.touched || registrarForm.touched) && registrarForm.errors?.['naoCoincide']">
+          As senhas não coincidem.
+        </small>
+      </div>
+
+      <button type="submit" [disabled]="registrarForm.invalid || carregando">
+        {{ carregando ? 'Processando...' : 'Cadastrar' }}
+      </button>
+
+    </form>
+
+    <div class="auth-footer">
+      <p>Já tem uma conta? <a routerLink="/auth/login">Faça o login por aqui</a></p>
+    </div>
+  </div>
+</div>
+
