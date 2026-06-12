@@ -24,29 +24,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Desativa CSRF pois tokens JWT são nativamente protegidos contra isso em APIs Stateless
+            // Desativa CSRF pois tokens JWT são nativamente protegidos
             .csrf(csrf -> csrf.disable())
-            
+
              // Define regras de autorização de rotas
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/auth/**",
+                    "/api/auth/**",
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html"
                 ).permitAll() // Endpoints de login, registo e Swagger são públicos
-                .anyRequest().authenticated()            // Qualquer outra rota exige o Token JWT
+                .anyRequest().authenticated() // Qualquer outra rota exige login
             )
-            
-            // Configura a política de sessão como estritamente STATELESS (sem estado no servidor)
+
+            // Configura a política de sessão como estritamente STATELESS
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            
-            // Injeta o provedor de autenticação e o filtro JWT na ordem correta do circuito
+
+            // Injeta o provedor de autenticação e o filtro JWT na ordem correta
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 }
+

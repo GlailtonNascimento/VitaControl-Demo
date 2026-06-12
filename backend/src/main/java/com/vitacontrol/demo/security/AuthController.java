@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth") // CORRIGIDO: Adicionado /api para bater com o Security e o Angular
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -17,7 +17,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthController(AuthenticationManager authenticationManager, UsuarioRepository usuarioRepository, 
+    public AuthController(AuthenticationManager authenticationManager, UsuarioRepository usuarioRepository,
                           PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.usuarioRepository = usuarioRepository;
@@ -25,8 +25,8 @@ public class AuthController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    // Endpoint de Registo de novos Utilizadores
-    @PostMapping("/registrar")
+    // Endpoint de Registro de novos Utilizadores
+    @PostMapping("/register") // CORRIGIDO: Mapeado em inglês para bater com a chamada do Angular
     public ResponseEntity<?> registrar(@RequestBody RegistoRequest request) {
         if (usuarioRepository.findByUsername(request.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body("Erro: Nome de utilizador já existe!");
@@ -34,7 +34,7 @@ public class AuthController {
 
         Usuario novoUsuario = new Usuario(
                 request.getUsername(),
-                passwordEncoder.encode(request.getPassword()) // Salva a senha criptografada em BCrypt
+                passwordEncoder.encode(request.getPassword()) // Salva a senha criptografada
         );
 
         usuarioRepository.save(novoUsuario);
@@ -49,14 +49,14 @@ public class AuthController {
         );
 
         Usuario usuario = usuarioRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Utilizador não encontrado após autenticação"));
+                .orElseThrow(() -> new RuntimeException("Utilizador não encontrado!"));
 
         String token = jwtTokenProvider.generateToken(usuario);
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 }
 
-// Classes auxiliares (DTOs) para transporte de dados limpos nas requisições HTTP
+// Classes auxiliares (DTOs) limpas e sem duplicidade
 class RegistoRequest {
     private String username;
     private String password;
@@ -81,3 +81,4 @@ class AuthenticationResponse {
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
 }
+

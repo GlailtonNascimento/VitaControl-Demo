@@ -23,24 +23,17 @@
         <input type="email" id="email" formControlName="email" placeholder="seu@email.com">
       </div>
 
-      <div class="input-group">
+      <div class="input-group" style="position: relative;">
         <label for="senha">Senha</label>
         <div style="position: relative; display: flex; align-items: center;">
           <input 
-            [type]="hidePassword ? 'password' : 'text'"
+            type="password"
             id="senha"
             formControlName="senha"
             placeholder="Mínimo 6 caracteres"
             required
             style="width: 100%; padding-right: 45px;"
           />
-          <button 
-            type="button"
-            (click)="togglePassword()"
-            style="position: absolute; right: 12px; background: none; border: none; cursor: pointer; font-size: 18px; padding: 0;"
-          >
-            {{ hidePassword ? '🙈' : '👁️' }}
-          </button>
         </div>
       </div>
 

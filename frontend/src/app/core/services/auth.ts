@@ -24,7 +24,7 @@ export class AuthService {
 
   // Registra um novo usuário no sistema mapeado no backend
   registrar(usuario: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/registrar`, usuario);
+    return this.http.post<any>(`${this.apiUrl}/register`, usuario);
   }
 
   // Remove o token do navegador, deslogando o usuário
