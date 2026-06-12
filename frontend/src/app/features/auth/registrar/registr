@@ -23,25 +23,9 @@
         <input type="email" id="email" formControlName="email" placeholder="seu@email.com" required />
       </div>
 
-      <div class="input-group" style="position: relative;">
+      <div class="input-group">
         <label for="senha">Senha</label>
-        <div style="position: relative; display: flex; align-items: center;">
-          <input 
-            [type]="hidePassword ? 'password' : 'text'" 
-            id="senha" 
-            formControlName="senha" 
-            placeholder="Mínimo 6 caracteres" 
-            required 
-            style="width: 100%; padding-right: 45px;" 
-          />
-          <button 
-            type="button" 
-            (click)="togglePassword()" 
-            style="position: absolute; right: 12px; background: none; border: none; cursor: pointer; font-size: 18px; color: #64748b; padding: 0; line-height: 1;"
-          >
-            {{ hidePassword ? '👁️' : '🙈' }}
-          </button>
-        </div>
+        <input type="password" id="senha" formControlName="senha" placeholder="Mínimo 6 caracteres" required />
       </div>
 
       <button type="submit" class="btn-login" [disabled]="isLoading">

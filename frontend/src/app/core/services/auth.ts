@@ -6,8 +6,8 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  // URL base apontando para a porta padrão do seu backend Spring Boot
-  private apiUrl = 'http://localhost:8080/auth';
+  // Ajustado com o IP real do Termux e a rota oficial do Spring Boot
+  private apiUrl = 'http://127.0.0.1:8080/api/auth';
 
   constructor(private http: HttpClient) {}
 
@@ -22,9 +22,9 @@ export class AuthService {
     );
   }
 
-  // Registra um novo usuário no sistema
+  // Registra um novo usuário no sistema mapeado no backend
   registrar(usuario: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, usuario);
+    return this.http.post<any>(`${this.apiUrl}/registrar`, usuario);
   }
 
   // Remove o token do navegador, deslogando o usuário
@@ -37,4 +37,5 @@ export class AuthService {
     return !!localStorage.getItem('token');
   }
 }
+	
 
