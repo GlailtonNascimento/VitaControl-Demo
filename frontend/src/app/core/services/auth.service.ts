@@ -19,8 +19,8 @@ export class AuthService {
     };
 
     return this.http.post(
-      `${this.apiUrl}/register`, 
-      payload, 
+      `${this.apiUrl}/register`,
+      payload,
       { responseType: 'text' }
     );
   }
@@ -32,6 +32,10 @@ export class AuthService {
     };
     return this.http.post(`${this.apiUrl}/login`, payload);
   }
+
+  // NOVO MÉTODO: Envia o token e a nova senha para o backend Java
+  redefinirSenha(token: string, novaSenha: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/redefinir-senha`, { token, novaSenha });
+  }
 }
-	
 
