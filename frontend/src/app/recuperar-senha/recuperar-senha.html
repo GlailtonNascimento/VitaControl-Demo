@@ -1,0 +1,41 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Recuperar Senha</h2>
+      <p>Digite o seu e-mail cadastrado para receber as instruções de redefinição.</p>
+    </div>
+
+    <div style="background-color: #10b981; color: white; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; text-align: center;" *ngIf="mensagemSucesso">
+      {{ mensagemSucesso }}
+    </div>
+
+    <div style="background-color: #ef4444; color: white; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; text-align: center;" *ngIf="mensagemErro">
+      {{ mensagemErro }}
+    </div>
+
+    <form class="auth-form" [formGroup]="recuperarForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="exemplo@email.com"
+          [style.border-color]="recuperarForm.get('email')?.invalid && recuperarForm.get('email')?.touched ? '#ef4444' : '#334155'"
+        >
+        <small style="color: #ef4444; margin-top: 4px; display: block;" *ngIf="recuperarForm.get('email')?.invalid && recuperarForm.get('email')?.touched">
+          Insira um e-mail válido.
+        </small>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="recuperarForm.invalid || carregando">
+        {{ carregando ? 'Enviando...' : 'Enviar Link de Recuperação' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <a routerLink="/auth/login" class="back-link">Voltar para o Login</a>
+    </div>
+  </div>
+</div>
+

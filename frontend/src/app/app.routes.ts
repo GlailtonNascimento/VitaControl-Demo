@@ -3,29 +3,34 @@ import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   // Rotas Públicas (Autenticação)
-  { 
-    path: 'auth/login', 
-    loadComponent: () => import('./features/auth/login/login').then(m => m.LoginComponent) 
+  {
+    path: 'auth/login',
+    loadComponent: () => import('./features/auth/login/login').then(m => m.LoginComponent)
   },
-  { 
-    path: 'auth/registrar', 
-    loadComponent: () => import('./features/auth/registrar/registrar').then(m => m.RegistrarComponent) 
+  {
+    path: 'auth/registrar',
+    loadComponent: () => import('./features/auth/registrar/registrar').then(m => m.RegistrarComponent)
+  },
+  {
+    path: 'auth/recuperar-senha',
+    loadComponent: () => import('./recuperar-senha/recuperar-senha').then(m => m.RecuperarSenha)
   },
 
   // Rotas Protegidas (Exigem autenticação via Token JWT)
-  { 
-    path: 'medicoes', 
+  {
+    path: 'medicoes',
     loadComponent: () => import('./features/medicoes/medicoes').then(m => m.MedicoesComponent),
-    canActivate: [authGuard] 
+    canActivate: [authGuard]
   },
-  { 
-    path: 'dashboard', 
+  {
+    path: 'dashboard',
     loadComponent: () => import('./features/dashboard/dashboard').then(m => m.DashboardComponent),
-    canActivate: [authGuard] 
+    canActivate: [authGuard]
   },
 
   // Redirecionamento Padrão para rotas vazias ou desconhecidas
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
   { path: '**', redirectTo: 'auth/login' }
 ];
+	
 

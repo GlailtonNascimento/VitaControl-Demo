@@ -1,37 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // Aponta para a API Java rodando localmente
-  private apiUrl = 'http://localhost:8080/auth';
+  private apiUrl = 'http://localhost:8080/api/auth'; // URL do seu Backend Java
 
   constructor(private http: HttpClient) {}
 
-  login(dados: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, dados).pipe(
-      tap(resposta => {
-        if (resposta && resposta.token) {
-          // Guarda o Token JWT com segurança para usar nas próximas chamadas
-          localStorage.setItem('token', resposta.token);
-        }
-      })
-    );
+  // 1. Método de Login (Mantendo a compatibilidade com o que você já tinha)
+  login(dadosLogin: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, dadosLogin);
   }
 
-  registrar(dados: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/registrar`, dados);
-  }
-
-  obterToken() {
-    return localStorage.getItem('token');
-  }
-
-  logout() {
-    localStorage.removeItem('token');
+  // 2. Método de Recuperação de Senha (O que acabamos de criar)
+  recuperarSenha(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/recuperar-senha`, { email });
   }
 }
 
