@@ -1,1 +1,26 @@
-<p>registrar works!</p>
+<div class="login-container">
+  <div class="login-card">
+    <h2>Criar Conta</h2>
+    <p class="subtitle">VitaControl - Gestão de Saúde</p>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <input type="text" [(ngModel)]="user.username" placeholder="Nome Completo" />
+    <input type="email" [(ngModel)]="user.email" placeholder="E-mail" />
+
+    <div class="password-field">
+      <input [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="user.password" placeholder="Senha" />
+      <span class="eye-icon" (click)="hidePassword = !hidePassword">👁️</span>
+    </div>
+
+    <button (click)="cadastrar()" [disabled]="loading">
+      {{ loading ? 'Cadastrando...' : 'Registrar' }}
+    </button>
+
+    <p class="link-text">Já tem uma conta? <a routerLink="/login" class="link">Faça Login</a></p>
+
+    <footer>desenvolvedor: Glailton Nascimento</footer>
+  </div>
+</div>

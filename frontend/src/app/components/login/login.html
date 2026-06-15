@@ -1,40 +1,34 @@
 <div class="login-container">
   <div class="login-card">
     <h2>VitaControl</h2>
+    <p class="subtitle">Acompanhamento de Pressão Arterial</p>
 
-    <div class="error-msg" *ngIf="erro">
-      {{ erro }}
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
     </div>
 
-    <form (ngSubmit)="executarLogin()">
-      <div class="form-group">
-        <label for="email">E-mail</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email" 
-          [(ngModel)]="usuario.email" 
-          required 
-          placeholder="Digite seu E-mail:  ">
-      </div>
+    <input
+      type="text"
+      [(ngModel)]="usuario.username"
+      placeholder="Usuário ou E-mail"
+    />
 
-      <div class="form-group">
-        <label for="senha">Senha de Acesso</label>
-        <input 
-          type="password" 
-          id="senha" 
-          name="senha" 
-          [(ngModel)]="usuario.senha" 
-          required 
-          placeholder="Digite sua senha">
-      </div>
-
-      <button type="submit" class="btn-login">Entrar no Sistema</button>
-    </form>
-
-    <div class="register-link">
-      Não tem uma conta? <a routerLink="/registrar">Cadastra-se</a>
+    <div class="password-field">
+      <input
+        [type]="hidePassword ? 'password' : 'text'"
+        [(ngModel)]="usuario.password"
+        placeholder="Senha"
+      />
+      <span class="eye-icon" (click)="hidePassword = !hidePassword">👁️</span>
     </div>
+
+    <button (click)="login()" [disabled]="loading">
+      {{ loading ? 'Entrando...' : 'Entrar' }}
+    </button>
+
+    <a routerLink="/registrar" class="link">Criar conta</a>
+    <a routerLink="/recuperar-senha" class="link">Esqueci a senha</a>
+
+    <footer>desenvolvedor: Glailton Nascimento</footer>
   </div>
 </div>
-

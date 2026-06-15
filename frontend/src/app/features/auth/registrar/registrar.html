@@ -1,58 +1,18 @@
 <div class="login-container">
   <div class="login-card">
-    <div class="login-header">
-      <h2>Criar Conta</h2>
-      <p class="subtitle">VitaControl - Gestão de Saúde</p>
+    <h2>Cadastro</h2>
+    <p class="subtitle">VitaControl</p>
+
+    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <input type="text" [(ngModel)]="user.username" placeholder="Usuário" />
+    <div class="password-field">
+      <input [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="user.password" placeholder="Senha" />
+      <span class="eye-icon" (click)="hidePassword = !hidePassword">👁️</span>
     </div>
 
-    <div *ngIf="errorMessage" class="alert error-alert">
-      {{ errorMessage }}
-    </div>
-    <div *ngIf="successMessage" class="alert success-alert">
-      {{ successMessage }}
-    </div>
-
-    <form [formGroup]="registrarForm" (ngSubmit)="onSubmit()">
-      <div class="input-group">
-        <label for="nome">Nome Completo</label>
-        <input type="text" id="nome" formControlName="nomeCompleto" placeholder="Digite seu nome">
-      </div>
-
-      <div class="input-group">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" formControlName="email" placeholder="seu@email.com">
-      </div>
-
-      <div class="input-group">
-        <label for="senha">Senha</label>
-        <div style="position: relative; display: flex; align-items: center;">
-          <input 
-            [type]="hidePassword ? 'password' : 'text'"
-            id="senha"
-            formControlName="senha"
-            placeholder="Mínimo 6 caracteres"
-            required
-            style="width: 100%; padding-right: 45px;"
-          />
-          <button 
-            type="button"
-            (click)="togglePassword()"
-            style="position: absolute; right: 12px; background: none; border: none; cursor: pointer; font-size: 18px; padding: 0;"
-          >
-            {{ hidePassword ? '🙈' : '👁️' }}
-          </button>
-        </div>
-      </div>
-
-      <button type="submit" class="btn-login" [disabled]="loading">
-        {{ loading ? 'Cadastrando...' : 'Registrar' }}
-      </button>
-    </form>
-
-    <div class="login-footer">
-      <p>Já tem uma conta? <a routerLink="/auth/login">Faça Login</a></p>
-      <p class="developer-signature">desenvolvedor: Glailton Nascimento</p>
-    </div>
+    <button (click)="cadastrar()" [disabled]="loading">{{ loading ? 'Cadastrando...' : 'Cadastrar' }}</button>
+    <a routerLink="/auth/login" class="link">Voltar para Login</a>
+    <footer>desenvolvedor: Glailton Nascimento</footer>
   </div>
 </div>
-

@@ -1,0 +1,18 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Recuperar Senha</h2>
+    <p class="subtitle">Digite seu e-mail cadastrado para receber as instruções</p>
+
+    <div class="success-message" *ngIf="mensagem">{{ mensagem }}</div>
+
+    <input type="email" [(ngModel)]="email" placeholder="E-mail" />
+
+    <button (click)="enviarLink()" [disabled]="loading">
+      {{ loading ? 'Enviando...' : 'Enviar Link de Recuperação' }}
+    </button>
+
+    <a routerLink="/login" class="link">Voltar para o Login</a>
+
+    <footer>desenvolvedor: Glailton Nascimento</footer>
+  </div>
+</div>
