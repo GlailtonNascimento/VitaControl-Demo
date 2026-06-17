@@ -1,0 +1,31 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Meu Perfil</h2>
+    <p class="subtitle">Atualize suas informações de contato</p>
+
+    <div class="error-message" *ngIf="errorMessage" style="color: #ff4d4d; margin-bottom: 15px; text-align: center; font-weight: bold;">
+      {{ errorMessage }}
+    </div>
+
+    <div class="success-message" *ngIf="successMessage" style="color: #2ec4b6; margin-bottom: 15px; text-align: center; font-weight: bold;">
+      {{ successMessage }}
+    </div>
+
+    <div style="text-align: left; margin-bottom: 15px;">
+      <label style="font-size: 0.9rem; color: #666; display: block; margin-bottom: 5px;">E-mail Adicional</label>
+      <input type="email" [(ngModel)]="perfil.emailSecundario" placeholder="exemplo@email.com" style="margin-bottom: 0;" />
+    </div>
+
+    <div style="text-align: left; margin-bottom: 20px;">
+      <label style="font-size: 0.9rem; color: #666; display: block; margin-bottom: 5px;">Celular / WhatsApp</label>
+      <input type="text" [(ngModel)]="perfil.celular" placeholder="(81) 99999-9999" style="margin-bottom: 0;" />
+    </div>
+
+    <button (click)="salvarPerfil()" [disabled]="loading">
+      {{ loading ? 'Salvando...' : 'Salvar Alterações' }}
+    </button>
+
+    <footer>desenvolvedor: Glailton Nascimento</footer>
+  </div>
+</div>
+

@@ -20,17 +20,34 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
+    if (!this.usuario.username || !this.usuario.password) {
+      this.errorMessage = 'Por favor, preencha todos os campos.';
+      return;
+    }
+
     this.loading = true;
     this.errorMessage = '';
+
     this.authService.login(this.usuario).subscribe({
       next: (res: any) => {
-        localStorage.setItem('token', res.token);
+        this.loading = false;
+        if (res && res.token) {
+          localStorage.setItem('token', res.token);
+        }
         this.router.navigate(['/dashboard']);
       },
       error: (err: any) => {
-        this.errorMessage = err.error?.message || 'Erro no login. Verifique suas credenciais.';
         this.loading = false;
+        console.error('Erro no login:', err);
+        
+        // Trata o erro amigavelmente para o usuário
+        if (err.status === 401 || err.status === 403) {
+          this.errorMessage = 'E-mail ou senha incorretos. Verifique suas credenciais.';
+        } else {
+          this.errorMessage = 'Não foi possível conectar ao servidor. Tente novamente.';
+        }
       }
     });
   }
 }
+

@@ -3,11 +3,17 @@
     <h2>Recuperar Senha</h2>
     <p class="subtitle">Digite seu e-mail cadastrado para receber as instruções</p>
 
-    <div class="success-message" *ngIf="mensagem">{{ mensagem }}</div>
+    <div class="success-message" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
 
     <input type="email" [(ngModel)]="email" placeholder="E-mail" />
 
-    <button (click)="enviarLink()" [disabled]="loading">
+    <button (click)="enviarLink()" [disabled]="!email || loading">
       {{ loading ? 'Enviando...' : 'Enviar Link de Recuperação' }}
     </button>
 
@@ -16,3 +22,4 @@
     <footer>desenvolvedor: Glailton Nascimento</footer>
   </div>
 </div>
+

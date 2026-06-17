@@ -1,0 +1,25 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Recuperar Senha</h2>
+    <p class="subtitle">VitaControl</p>
+
+    <div class="error-message" *ngIf="errorMessage" style="color: #ff4d4d; margin-bottom: 15px; text-align: center; font-weight: bold;">
+      {{ errorMessage }}
+    </div>
+
+    <div class="success-message" *ngIf="successMessage" style="color: #2ec4b6; margin-bottom: 15px; text-align: center; font-weight: bold;">
+      {{ successMessage }}
+    </div>
+
+    <input type="email" [(ngModel)]="email" placeholder="Digite seu e-mail cadastrado" />
+
+    <button (click)="enviarEmail()" [disabled]="loading">
+      {{ loading ? 'Enviando...' : 'Enviar Link de Recuperação' }}
+    </button>
+
+    <a routerLink="/auth/login" class="link">Voltar para Login</a>
+
+    <footer>desenvolvedor: Glailton Nascimento</footer>
+  </div>
+</div>
+

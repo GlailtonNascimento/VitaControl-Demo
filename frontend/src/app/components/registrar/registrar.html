@@ -7,6 +7,10 @@
       {{ errorMessage }}
     </div>
 
+    <div class="success-message" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
     <input type="text" [(ngModel)]="user.username" placeholder="Nome Completo" />
     <input type="email" [(ngModel)]="user.email" placeholder="E-mail" />
 
@@ -15,7 +19,7 @@
       <span class="eye-icon" (click)="hidePassword = !hidePassword">👁️</span>
     </div>
 
-    <button (click)="cadastrar()" [disabled]="loading">
+    <button (click)="cadastrar()" [disabled]="loading || successMessage">
       {{ loading ? 'Cadastrando...' : 'Registrar' }}
     </button>
 
@@ -24,3 +28,4 @@
     <footer>desenvolvedor: Glailton Nascimento</footer>
   </div>
 </div>
+
