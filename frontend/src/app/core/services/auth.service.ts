@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   // Voltando para o seu backend local do Termux que está ligado
-  private apiUrl = 'http://192.0.0.4:8080/api';
+  private apiUrl = 'http://127.0.0.1:8080/api';
 
   constructor(private http: HttpClient) {}
 

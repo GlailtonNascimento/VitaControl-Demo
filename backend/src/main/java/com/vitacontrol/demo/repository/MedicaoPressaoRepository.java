@@ -5,11 +5,13 @@ import com.vitacontrol.demo.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface MedicaoPressaoRepository extends JpaRepository<MedicaoPressao, UUID> {
+public interface MedicaoPressaoRepository extends JpaRepository<MedicaoPressao, Long> {
     
-    // Filtro estrito por usuário para garantir o isolamento total de escopo
+    // Atende o MedicaoPressaoController
+    List<MedicaoPressao> findByUsuario(Usuario usuario);
+    
+    // Atende o MedicaoController
     List<MedicaoPressao> findByUsuarioOrderByDataHoraDesc(Usuario usuario);
 }

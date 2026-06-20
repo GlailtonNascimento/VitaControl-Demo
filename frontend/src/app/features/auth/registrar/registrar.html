@@ -1,18 +1,36 @@
-<div class="login-container">
-  <div class="login-card">
-    <h2>Cadastro</h2>
-    <p class="subtitle">VitaControl</p>
+<div class="container">
+  <div class="card">
+    <h2>VitaControl</h2>
+    <p>Criar Nova Conta no Sistema</p>
 
-    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
-
-    <input type="text" [(ngModel)]="user.username" placeholder="Usuário" />
-    <div class="password-field">
-      <input [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="user.password" placeholder="Senha" />
-      <span class="eye-icon" (click)="hidePassword = !hidePassword">👁️</span>
+    <div *ngIf="mensagemErro" class="alert alert-danger">
+      {{ mensagemErro }}
     </div>
 
-    <button (click)="cadastrar()" [disabled]="loading">{{ loading ? 'Cadastrando...' : 'Cadastrar' }}</button>
-    <a routerLink="/auth/login" class="link">Voltar para Login</a>
-    <footer>desenvolvedor: Glailton Nascimento</footer>
+    <form (ngSubmit)="cadastrar()">
+      <div class="form-group">
+        <input type="text" [(ngModel)]="usuario.nome" name="nome" placeholder="Nome Completo" required class="form-control">
+      </div>
+
+      <div class="form-group">
+        <input type="email" [(ngModel)]="usuario.email" name="email" placeholder="E-mail" required class="form-control">
+      </div>
+
+      <div class="form-group password-container">
+        <input type="password" [(ngModel)]="usuario.senha" name="senha" placeholder="Senha" required class="form-control">
+      </div>
+
+      <button type="submit" [disabled]="carregando" class="btn btn-primary">
+        {{ carregando ? 'Criando conta...' : 'Cadastrar' }}
+      </button>
+    </form>
+
+    <div class="links-container">
+      <a routerLink="/login" class="link">Já tem uma conta? Entrar</a>
+    </div>
+
+    <div class="footer">
+      <small>desenvolvedor: Glailton Nascimento</small>
+    </div>
   </div>
 </div>

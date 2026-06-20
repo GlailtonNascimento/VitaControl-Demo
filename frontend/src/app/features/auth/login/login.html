@@ -9,16 +9,21 @@
 
     <input type="text" [(ngModel)]="usuario.username" placeholder="Usuário ou E-mail" />
 
-    <div class="password-field">
-      <input [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="usuario.password" placeholder="Senha" />
-      <span class="eye-icon" (click)="hidePassword = !hidePassword">👁️</span>
+    <div class="password-field" style="position: relative; width: 100%;">
+      <input [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="usuario.password" placeholder="Senha" style="padding-right: 45px;" />
+      <span class="password-toggle-icon" (click)="hidePassword = !hidePassword" style="position: absolute; right: 15px; top: 14px; cursor: pointer; font-size: 1.1rem; z-index: 10; user-select: none;">
+        {{ hidePassword ? '🔒' : '👁️' }}
+      </span>
     </div>
 
-    <button (click)="login()" [disabled]="loading">
+    <button (click)="login()" [disabled]="loading" style="margin-top: 20px;">
       {{ loading ? 'Entrando...' : 'Entrar' }}
     </button>
 
-    <a routerLink="/auth/registrar" class="link">Criar conta</a>
+    <div class="login-links" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px; align-items: center;">
+      <a routerLink="/registrar" class="link">Criar conta</a>
+      <a routerLink="/esqueci-senha" class="link">Esqueci a senha</a>
+    </div>
 
     <footer>desenvolvedor: Glailton Nascimento</footer>
   </div>

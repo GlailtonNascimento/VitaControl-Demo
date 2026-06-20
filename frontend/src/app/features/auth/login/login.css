@@ -3,38 +3,116 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #f0f2f5;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
 }
+
 .login-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 400px;
+  text-align: center;
 }
+
+h2 {
+  margin: 0 0 10px 0;
+  color: #1f2937;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+
+input[type="text"], input[type="password"] {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background-color: #f9fafb;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+input:focus {
+  border-color: #6366f1;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
 .password-field {
   position: relative;
+  width: 100%;
 }
+
 .eye-icon {
   position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 15px;
+  top: 14px;
   cursor: pointer;
+  color: #9ca3af;
 }
-.error-message {
-  color: red;
-  margin-bottom: 1rem;
+
+button {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  transition: all 0.3s ease;
+  margin-bottom: 15px;
 }
+
+button:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 .link {
-  cursor: pointer;
-  color: #007bff;
   display: block;
-  margin-top: 10px;
-  text-align: center;
+  margin-top: 12px;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
+
+.link:hover {
+  text-decoration: underline;
+}
+
 footer {
-  margin-top: 20px;
+  margin-top: 30px;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 15px;
+  color: #9ca3af;
   font-size: 0.8rem;
-  text-align: center;
+}
+
+.error-message {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  background-color: #ffeeef;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  text-align: left;
 }

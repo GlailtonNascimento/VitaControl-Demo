@@ -1,30 +1,11 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
+import { RegistrarComponent } from './features/auth/registrar/registrar.component';
+import { LoginComponent } from './features/auth/login/login';
+import { RecuperarSenha } from './features/auth/recuperar-senha/recuperar-senha';
 
 export const routes: Routes = [
-  {
-    path: 'login',
-    loadComponent: () => import('./components/login/login').then(m => m.LoginComponent)
-  },
-  {
-    path: 'registrar',
-    loadComponent: () => import('./components/registrar/registrar').then(m => m.RegistrarComponent)
-  },
-  {
-    path: 'recuperar-senha',
-    loadComponent: () => import('./components/recuperar-senha/recuperar-senha').then(m => m.RecuperarSenhaComponent)
-  },
-  {
-    path: 'dashboard',
-    loadComponent: () => import('./components/dashboard/dashboard').then(m => m.DashboardComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'perfil',
-    loadComponent: () => import('./components/perfil/perfil').then(m => m.Perfil),
-    canActivate: [authGuard]
-  },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
+  { path: 'login', component: LoginComponent },
+  { path: 'registrar', component: RegistrarComponent },
+  { path: 'esqueci-senha', component: RecuperarSenha },
+  { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
-
