@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../core/services/auth.service'; // Importado o serviço real
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-recuperar-senha',
@@ -14,23 +14,31 @@ import { AuthService } from '../../core/services/auth.service'; // Importado o s
 export class RecuperarSenhaComponent {
   email = '';
   loading = false;
-  successMessage = ''; // Mensagem verde de sucesso
-  errorMessage = '';   // Mensagem vermelha de erro
+  successMessage = '';
+  errorMessage = '';
 
-  constructor(private authService: AuthService) {} // Injetando o AuthService
+  // Trava local de borda (0 segundos)
+  emailError = '';
+
+  constructor(private authService: AuthService) {}
 
   enviarLink() {
-    // Validação preventiva: impede o clique com campo vazio
+    // Limpa estados de erro anteriores
+    this.emailError = '';
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    // Validação estrita na borda do cliente (0s)
     if (!this.email || !this.email.trim()) {
-      this.errorMessage = 'Por favor, insira um e-mail válido.';
+      this.emailError = 'O preenchimento do e-mail é obrigatório para recuperação.';
+      return;
+    } else if (!this.email.includes('@')) {
+      this.emailError = 'Por favor, insira um endereço de e-mail válido.';
       return;
     }
 
     this.loading = true;
-    this.successMessage = '';
-    this.errorMessage = '';
 
-    // Chamando a rota real do Spring Boot que configuramos no auth.service
     this.authService.recuperarSenha(this.email.trim()).subscribe({
       next: (res: any) => {
         this.loading = false;
@@ -39,9 +47,11 @@ export class RecuperarSenhaComponent {
       error: (err: any) => {
         this.loading = false;
         console.error('Erro na recuperação:', err);
-        
+
         if (err.status === 404) {
           this.errorMessage = 'Este e-mail não foi encontrado na nossa base de dados.';
+        } else if (err.status === 0) {
+          this.errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão.';
         } else {
           this.errorMessage = 'Ocorreu um erro ao processar a solicitação. Tente novamente mais tarde.';
         }
@@ -49,4 +59,3 @@ export class RecuperarSenhaComponent {
     });
   }
 }
-

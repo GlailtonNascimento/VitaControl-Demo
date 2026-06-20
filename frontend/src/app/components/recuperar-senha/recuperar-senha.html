@@ -1,25 +1,43 @@
 <div class="login-container">
   <div class="login-card">
-    <h2>Recuperar Senha</h2>
-    <p class="subtitle">Digite seu e-mail cadastrado para receber as instruções</p>
+    <h2>VitaControl</h2>
+    <p class="subtitle">Recuperação de Senha Institucional</p>
 
-    <div class="success-message" *ngIf="successMessage">
-      {{ successMessage }}
-    </div>
-
-    <div class="error-message" *ngIf="errorMessage">
+    <!-- Alerta Geral de Erro do Servidor -->
+    <div class="error-message" *ngIf="errorMessage && !emailError" style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 1.2rem; text-align: center;">
       {{ errorMessage }}
     </div>
 
-    <input type="email" [(ngModel)]="email" placeholder="E-mail" />
+    <!-- Alerta Geral de Sucesso (E-mail enviado) -->
+    <div class="success-message" *ngIf="successMessage" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin-bottom: 1.2rem; text-align: center;">
+      {{ successMessage }}
+    </div>
 
-    <button (click)="enviarLink()" [disabled]="!email || loading">
-      {{ loading ? 'Enviando...' : 'Enviar Link de Recuperação' }}
-    </button>
+    <div class="login-fields">
+      
+      <!-- Campo de E-mail para Recuperação -->
+      <div class="input-group" style="margin-bottom: 1.2rem;">
+        <input 
+          type="text" 
+          name="email"
+          [(ngModel)]="email" 
+          placeholder="Digite seu e-mail cadastrado" 
+          (input)="emailError = ''"
+          (keyup.enter)="enviarLink()"
+          [style.border]="emailError ? '1px solid red' : '1px solid #ccc'"
+          style="width:100%; padding:10px; border-radius:4px; box-sizing: border-box;" />
+        <span style="color: red; font-size: 0.8rem; display: block; margin-top: 4px;" *ngIf="emailError">{{ emailError }}</span>
+      </div>
 
-    <a routerLink="/login" class="link">Voltar para o Login</a>
+      <!-- Botão Enviar Link -->
+      <button type="button" [disabled]="loading" (click)="enviarLink()" style="width:100%; padding:12px; background-color:#007bff; color:white; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">
+        {{ loading ? 'Processando envio...' : 'Enviar Link de Recuperação' }}
+      </button>
 
-    <footer>desenvolvedor: Glailton Nascimento</footer>
+    </div>
+
+    <a routerLink="/login" style="display:block; text-align:center; margin-top:15px; color:#007bff; text-decoration:none;">Voltar para o Login</a>
+
+    <footer style="margin-top:25px; font-size:0.8rem; text-align:center; color:#6c757d;">desenvolvedor: Glailton Nascimento</footer>
   </div>
 </div>
-

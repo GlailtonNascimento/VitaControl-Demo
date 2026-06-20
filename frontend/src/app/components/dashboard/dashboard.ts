@@ -15,12 +15,17 @@ export class DashboardComponent implements OnInit {
   historicoMedicoes: any[] = [];
   mensagemSucesso: string = '';
   mensagemErro: string = '';
-  private apiUrl = 'http://localhost:8080/api';
+  loading: boolean = false;
+
+  sistolicaError: string = '';
+  diastolicaError: string = '';
+  pulsacaoError: string = '';
+
+  private apiUrl = 'http://192.0.0.4:8080/api'; 
 
   constructor(private fb: FormBuilder, private http: HttpClient) {}
 
   ngOnInit(): void {
-    // Inicialização dos campos reativos do formulário clínico
     this.medicaoForm = this.fb.group({
       sistolica: ['', [Validators.required, Validators.min(50), Validators.max(250)]],
       diastolica: ['', [Validators.required, Validators.min(30), Validators.max(150)]],
@@ -31,7 +36,6 @@ export class DashboardComponent implements OnInit {
     this.carregarHistorico();
   }
 
-  // Prepara os cabeçalhos HTTP injetando o Bearer Token obtido do LocalStorage
   private obterHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({
@@ -40,7 +44,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Consome dinamicamente o histórico de medições do endpoint protegido do backend
   carregarHistorico(): void {
     this.http.get<any[]>(`${this.apiUrl}/medicoes`, { headers: this.obterHeaders() })
       .subscribe({
@@ -48,34 +51,71 @@ export class DashboardComponent implements OnInit {
           this.historicoMedicoes = dados;
         },
         error: (err) => {
-          this.mensagemErro = 'Não foi possível carregar o histórico de medições.';
+          console.error('Erro ao carregar histórico:', err);
+          this.mensagemErro = 'Não foi possível conectar ao servidor para carregar o histórico.';
         }
       });
   }
 
-  // Submete o payload clínico para o endpoint protegido POST /api/medicao
   submeterMedicao(): void {
-    if (this.medicaoForm.invalid) {
-      this.mensagemErro = 'Por favor, preencha todos os campos corretamente.';
+    this.sistolicaError = '';
+    this.diastolicaError = '';
+    this.pulsacaoError = '';
+    this.mensagemSucesso = '';
+    this.mensagemErro = '';
+
+    let temErro = false;
+
+    const sistolicaControl = this.medicaoForm.get('sistolica');
+    if (sistolicaControl?.hasError('required') || !sistolicaControl?.value) {
+      this.sistolicaError = 'A pressão sistólica (máxima) é obrigatória.';
+      temErro = true;
+    } else if (sistolicaControl?.hasError('min') || sistolicaControl?.hasError('max')) {
+      this.sistolicaError = 'Insira um valor de sistólica válido entre 50 e 250 mmHg.';
+      temErro = true;
+    }
+
+    const diastolicaControl = this.medicaoForm.get('diastolica');
+    if (diastolicaControl?.hasError('required') || !diastolicaControl?.value) {
+      this.diastolicaError = 'A pressão diastólica (mínima) é obrigatória.';
+      temErro = true;
+    } else if (diastolicaControl?.hasError('min') || diastolicaControl?.hasError('max')) {
+      this.diastolicaError = 'Insira um valor de diastólica válido entre 30 e 150 mmHg.';
+      temErro = true;
+    }
+
+    const pulsacaoControl = this.medicaoForm.get('pulsacao');
+    if (pulsacaoControl?.hasError('required') || !pulsacaoControl?.value) {
+      this.pulsacaoError = 'A pulsação/frequência cardíaca é obrigatória.';
+      temErro = true;
+    } else if (pulsacaoControl?.hasError('min') || pulsacaoControl?.hasError('max')) {
+      this.pulsacaoError = 'A pulsação deve estar entre 30 e 200 BPM.';
+      temErro = true;
+    }
+
+    if (temErro) {
+      this.mensagemErro = 'Por favor, corrija as inconsistências do formulário antes de enviar.';
       return;
     }
 
-    this.http.post(`${this.apiUrl}/medicao`, this.medicaoForm.value, { headers: this.obterHeaders() })
+    this.loading = true;
+
+    this.http.post(`${this.apiUrl}/medicoes`, this.medicaoForm.value, { headers: this.obterHeaders() })
       .subscribe({
         next: () => {
-          this.mensagemSucesso = 'Medição registrada com sucesso!';
-          this.mensagemErro = '';
+          this.loading = false;
+          this.mensagemSucesso = 'Medição biológica registrada e salva com sucesso!';
           this.medicaoForm.reset({ contexto: 'Em repouso' });
-          this.carregarHistorico(); // Atualiza a tabela local em tempo real
+          this.carregarHistorico();
         },
         error: (err) => {
-          this.mensagemErro = 'Erro ao salvar a medição. Verifique sua autenticação.';
-          this.mensagemSucesso = '';
+          this.loading = false;
+          console.error('Erro ao salvar medição:', err);
+          this.mensagemErro = 'Erro ao salvar a medição. Verifique sua conexão ou autenticação.';
         }
       });
   }
 
-  // Realiza a classificação dinâmica de alertas com base nas faixas médicas normativas
   getClassificacao(sistolica: number, diastolica: number): { texto: string; classe: string } {
     if (sistolica < 120 && diastolica < 80) {
       return { texto: 'Normal', classe: 'status-normal' };
@@ -88,4 +128,3 @@ export class DashboardComponent implements OnInit {
     }
   }
 }
-

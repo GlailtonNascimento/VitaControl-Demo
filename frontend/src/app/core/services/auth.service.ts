@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+  // Voltando para o seu backend local do Termux que está ligado
   private apiUrl = 'http://192.0.0.4:8080/api';
 
   constructor(private http: HttpClient) {}
@@ -18,9 +19,7 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/usuarios/cadastrar`, user);
   }
 
-  // Nova rota para envio do e-mail de recuperação de senha
   recuperarSenha(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/recuperar-senha`, { email });
   }
 }
-

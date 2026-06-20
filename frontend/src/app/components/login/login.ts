@@ -15,41 +15,31 @@ export class LoginComponent {
   usuario = { username: '', password: '' };
   loading = false;
   errorMessage = '';
+  hidePassword = true;
+
   emailError = '';
   passwordError = '';
-  hidePassword = true;
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  validarEmail(email: string): boolean {
-    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return re.test(String(email).toLowerCase().trim());
-  }
-
   login() {
-    this.errorMessage = '';
     this.emailError = '';
     this.passwordError = '';
+    this.errorMessage = '';
 
     let temErro = false;
 
     if (!this.usuario.username || !this.usuario.username.trim()) {
-      this.emailError = 'Por favor, digite seu e-mail.';
-      temErro = true;
-    } else if (!this.validarEmail(this.usuario.username)) {
-      this.emailError = 'Por favor, insira um e-mail válido.';
+      this.emailError = 'O preenchimento do usuário ou e-mail é obrigatório.';
       temErro = true;
     }
 
     if (!this.usuario.password || !this.usuario.password.trim()) {
-      this.passwordError = 'A senha é obrigatória para entrar.';
+      this.passwordError = 'A senha é obrigatória para acessar o sistema.';
       temErro = true;
     }
 
-    // TRAVA ABSOLUTA LOCAL
-    if (temErro) {
-      return;
-    }
+    if (temErro) return;
 
     this.loading = true;
 
@@ -58,21 +48,22 @@ export class LoginComponent {
         this.loading = false;
         if (res && res.token) {
           localStorage.setItem('token', res.token);
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.errorMessage = 'Resposta inválida do servidor.';
         }
-        this.router.navigate(['/dashboard']);
       },
       error: (err: any) => {
         this.loading = false;
-        console.error('Erro detectado no login:', err);
+        console.error('Erro de login retornado:', err);
 
-        const msgOriginal = err?.message || String(err);
-        
         if (err.status === 401 || err.status === 403) {
-          this.errorMessage = 'E-mail ou senha incorretos. Verifique seus dados.';
-        } else if (err.status === 0 || msgOriginal.toLowerCase().includes('fetch')) {
-          this.errorMessage = 'Não foi possível conectar ao aplicativo. Verifique sua conexão com a internet.';
+          this.errorMessage = 'Usuário ou senha incorretos! Verifique suas credenciais.';
+        } else if (err.status === 0) {
+          // Aqui tratamos o erro do print: ajustamos a instrução visual
+          this.errorMessage = 'Não foi possível conectar ao servidor Spring Boot. Verifique se o backend está rodando no IP correto.';
         } else {
-          this.errorMessage = 'Instabilidade no sistema. Por favor, tente novamente em alguns instantes.';
+          this.errorMessage = 'Falha interna ao tentar realizar o login. Tente novamente.';
         }
       }
     });
