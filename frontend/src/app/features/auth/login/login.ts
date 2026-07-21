@@ -12,7 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-  usuario = { username: '', password: '' };
+  usuario = { email: '', senha: '' };  // ← CORRIGIDO
   errorMessage: string = '';
   loading: boolean = false;
   hidePassword = true;
@@ -22,10 +22,11 @@ export class LoginComponent {
   login() {
     this.loading = true;
     this.errorMessage = '';
-    
+
     this.authService.login(this.usuario).subscribe({
       next: (res: any) => {
         this.loading = false;
+        localStorage.setItem('token', res.token);  // ← Salvar token
         this.router.navigate(['/dashboard']);
       },
       error: (err: any) => {

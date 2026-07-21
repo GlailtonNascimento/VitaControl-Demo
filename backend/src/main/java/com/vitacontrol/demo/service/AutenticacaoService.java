@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public class AutenticacaoService {
     @Autowired
     private TokenRecuperacaoSenhaRepository tokenRepository;
 
-    @Autowired
+    @Autowired(required = false)  // ← para não quebrar sem e-mail
     private JavaMailSender mailSender;
 
     @Autowired
@@ -33,38 +34,73 @@ public class AutenticacaoService {
     public String solicitarRecuperacaoSenha(String email) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(email);
         if (usuarioOpt.isEmpty()) {
-            return "Se o e-mail existir no sistema, um link será enviado.";
+            return "E-mail não encontrado!";
         }
+
         Usuario usuario = usuarioOpt.get();
-        tokenRepository.deleteByUsuario(usuario);
-        String tokenAleatorio = UUID.randomUUID().toString();
-        TokenRecuperacaoSenha novoToken = new TokenRecuperacaoSenha(tokenAleatorio, usuario, 15);
-        tokenRepository.save(novoToken);
-        enviarEmail(email, tokenAleatorio);
-        return tokenAleatorio;
+        
+        // Gerar token único
+        String token = UUID.randomUUID().toString();
+        
+        // Salvar token no banco com expiração (1 hora)
+        TokenRecuperacaoSenha tokenRecuperacao = new TokenRecuperacaoSenha();
+        tokenRecuperacao.setToken(token);
+        tokenRecuperacao.setUsuario(usuario);
+        tokenRecuperacao.setDataExpiracao(LocalDateTime.now().plusHours(1));
+        tokenRepository.save(tokenRecuperacao);
+        
+        // Enviar e-mail
+        if (mailSender != null) {
+            enviarEmailRecuperacao(usuario.getUsername(), token);
+            return "E-mail de recuperação enviado para " + email;
+        } else {
+            return "Token gerado (e-mail não configurado): " + token;
+        }
+    }
+
+    private void enviarEmailRecuperacao(String email, String token) {
+        if (mailSender == null) return;
+        
+        String link = "http://localhost:4200/redefinir-senha?token=" + token;
+        String assunto = "Recuperação de Senha - VitaControl";
+        String mensagem = "Olá!\n\n" +
+                          "Clique no link abaixo para redefinir sua senha:\n\n" +
+                          link + "\n\n" +
+                          "Este link é válido por 1 hora.\n\n" +
+                          "Se você não solicitou esta recuperação, ignore este e-mail.\n\n" +
+                          "Atenciosamente,\n" +
+                          "Equipe VitaControl";
+        
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(email);
+        mailMessage.setSubject(assunto);
+        mailMessage.setText(mensagem);
+        mailSender.send(mailMessage);
     }
 
     @Transactional
-    public void atualizarSenhaComToken(String token, String novaSenha) {
+    public String redefinirSenha(String token, String novaSenha) {
         Optional<TokenRecuperacaoSenha> tokenOpt = tokenRepository.findByToken(token);
         if (tokenOpt.isEmpty()) {
-            throw new IllegalArgumentException("Token inválido ou expirado.");
+            return "Token inválido!";
         }
+
         TokenRecuperacaoSenha tokenRecuperacao = tokenOpt.get();
+        
+        // Verificar se o token está expirado
+        if (tokenRecuperacao.getDataExpiracao().isBefore(LocalDateTime.now())) {
+            tokenRepository.delete(tokenRecuperacao);
+            return "Token expirado! Solicite uma nova recuperação.";
+        }
+
+        // Atualizar senha
         Usuario usuario = tokenRecuperacao.getUsuario();
         usuario.setPassword(passwordEncoder.encode(novaSenha));
         usuarioRepository.save(usuario);
+        
+        // Deletar token usado
         tokenRepository.delete(tokenRecuperacao);
-    }
-
-    private void enviarEmail(String emailDestinatario, String token) {
-        String linkRedefinicao = "http://localhost:4200/redefinir-senha?token=" + token;
-        SimpleMailMessage mensagem = new SimpleMailMessage();
-        mensagem.setTo(emailDestinatario);
-        mensagem.setSubject("Recuperação de Senha - VitaControl");
-        mensagem.setText("Olá! Use este link para redefinir sua senha: " + linkRedefinicao 
-                        + "\n\nVálido por 15 minutos.");
-        mailSender.send(mensagem);
+        
+        return "Senha redefinida com sucesso!";
     }
 }
-
