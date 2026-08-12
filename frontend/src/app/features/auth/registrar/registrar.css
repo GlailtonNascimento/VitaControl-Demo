@@ -1,4 +1,5 @@
-.container {
+/* registrar.css – IDÊNTICO ao login */
+.registrar-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,7 +9,7 @@
   padding: 20px;
 }
 
-.card {
+.registrar-card {
   background: #ffffff;
   padding: 40px 30px;
   border-radius: 20px;
@@ -25,7 +26,7 @@ h2 {
   font-weight: 700;
 }
 
-p {
+.subtitle {
   color: #6b7280;
   margin-bottom: 30px;
   font-size: 0.95rem;
@@ -54,6 +55,19 @@ p {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 15px;
+  top: 14px;
+  cursor: pointer;
+  color: #9ca3af;
+}
+
 .btn {
   width: 100%;
   padding: 14px;
@@ -62,16 +76,13 @@ p {
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-primary {
   background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
   color: white;
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
+.btn:hover {
   opacity: 0.9;
 }
 
@@ -84,7 +95,7 @@ p {
 
 .link {
   display: block;
-  margin-top: 20px;
+  margin-top: 12px;
   color: #2563eb;
   text-decoration: none;
   font-size: 0.9rem;
@@ -100,6 +111,7 @@ p {
   border-top: 1px solid #f3f4f6;
   padding-top: 15px;
   color: #9ca3af;
+  font-size: 0.8rem;
 }
 
 .alert {
@@ -119,15 +131,6 @@ p {
 .links-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.link.sub-link {
-  color: #6b7280;
-  font-size: 0.85rem;
-}
-
-.link.sub-link:hover {
-  color: #4f46e5;
+  gap: 8px;
+  margin-top: 15px;
 }

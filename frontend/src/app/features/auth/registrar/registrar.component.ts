@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -13,11 +12,11 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./registrar.css']
 })
 export class RegistrarComponent {
-  usuario = { nome: '', email: '', senha: '' };
+  usuario = { username: '', password: '' };  // ← ajustado
   mensagemErro: string = '';
   mensagemSucesso: string = '';
   carregando: boolean = false;
-  hidePassword = true;  // ← CONTROLE DO CADEADO
+  hidePassword = true;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -32,7 +31,6 @@ export class RegistrarComponent {
         this.mensagemSucesso = 'Cadastro realizado com sucesso!';
         setTimeout(() => {
           this.router.navigate(['/login']);
-
         }, 2000);
       },
       error: (err: any) => {

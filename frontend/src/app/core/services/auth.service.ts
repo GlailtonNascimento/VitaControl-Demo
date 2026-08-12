@@ -11,14 +11,14 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // Login com e-mail e senha
-  login(credentials: { email: string; senha: string }): Observable<any> {
+  // Login com username e password
+  login(credentials: { username: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/login`, credentials);
   }
 
-  // Cadastro com nome, e-mail e senha
-  cadastrar(user: { nome: string; email: string; senha: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/registrar`, user);
+  // Cadastro com username e password
+  cadastrar(user: { username: string; password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register`, user);
   }
 
   // Solicitar recuperação de senha

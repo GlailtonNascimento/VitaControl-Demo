@@ -1,48 +1,46 @@
-<div class="card">
-  <h2>VitaControl</h2>
-  <p>Criar Nova Conta no Sistema</p>
+<div class="registrar-container">
+  <div class="registrar-card">
+    <h2>VitaControl</h2>
+    <p class="subtitle">Criar Nova Conta no Sistema</p>
 
-  <div *ngIf="mensagemErro" class="alert alert-danger">
-    {{ mensagemErro }}
-  </div>
-
-  <div *ngIf="mensagemSucesso" class="alert alert-success">
-    {{ mensagemSucesso }}
-  </div>
-
-  <form (ngSubmit)="cadastrar()">
-    <div class="form-group">
-      <input type="text" [(ngModel)]="usuario.nome" name="nome" placeholder="Nome Completo" required>
+    <div *ngIf="mensagemErro" class="alert alert-danger">
+      {{ mensagemErro }}
     </div>
 
-    <div class="form-group">
-      <input type="email" [(ngModel)]="usuario.email" name="email" placeholder="E-mail" required>
+    <div *ngIf="mensagemSucesso" class="alert alert-success">
+      {{ mensagemSucesso }}
     </div>
 
-    <div class="form-group password-container" style="position: relative;">
-      <input [type]="hidePassword ? 'password' : 'text'" 
-             [(ngModel)]="usuario.senha" 
-             name="senha" 
-             placeholder="Senha"
-             style="width: 100%; padding-right: 45px;" 
-             required>
-      <span class="password-toggle-icon" 
-            (click)="hidePassword = !hidePassword"
-            style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 20px; user-select: none;">
-        {{ hidePassword ? '🔒' : '👁️' }}
-      </span>
+    <form (ngSubmit)="cadastrar()">
+      <div class="form-group">
+        <input type="text" [(ngModel)]="usuario.username" name="username" placeholder="E-mail" required>
+      </div>
+
+      <div class="form-group password-field" style="position: relative; width: 100%;">
+        <input [type]="hidePassword ? 'password' : 'text'"
+               [(ngModel)]="usuario.password"
+               name="password"
+               placeholder="Senha"
+               style="width: 100%; padding-right: 45px; box-sizing: border-box;"
+               required>
+        <span class="eye-icon"
+              (click)="hidePassword = !hidePassword"
+              style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 20px; user-select: none;">
+          {{ hidePassword ? '🔒' : '👁️' }}
+        </span>
+      </div>
+
+      <button type="submit" [disabled]="carregando" class="btn">
+        {{ carregando ? 'Criando conta...' : 'Cadastrar' }}
+      </button>
+    </form>
+
+    <div class="links-container">
+      <a routerLink="/login" class="link">Já tem uma conta? Entrar</a>
     </div>
 
-    <button type="submit" [disabled]="carregando" class="btn btn-primary">
-      {{ carregando ? 'Criando conta...' : 'Cadastrar' }}
-    </button>
-  </form>
-
-  <div class="links-container">
-    <a routerLink="/login" class="link">Já tem uma conta? Entrar</a>
-  </div>
-
-  <div class="footer">
-    <small>desenvolvedor: Glailton Nascimento</small>
+    <div class="footer">
+      <small>desenvolvedor: Glailton Nascimento</small>
+    </div>
   </div>
 </div>

@@ -7,16 +7,16 @@
       {{ errorMessage }}
     </div>
 
-    <input type="text" [(ngModel)]="usuario.email" placeholder="Usuário ou E-mail">
+    <input type="text" [(ngModel)]="usuario.username" placeholder="Usuário ou E-mail">
 
     <div class="password-field" style="position: relative; width: 100%;">
-      <input [type]="hidePassword ? 'password' : 'text'" 
-             [(ngModel)]="usuario.senha" 
+      <input [type]="hidePassword ? 'password' : 'text'"
+             [(ngModel)]="usuario.password"
              placeholder="Senha"
              style="width: 100%; padding-right: 45px;">
-      <span class="password-toggle-icon" 
+      <span class="password-toggle-icon"
             (click)="hidePassword = !hidePassword"
-            style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 20px;">
+            style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 20px; user-select: none;">
         {{ hidePassword ? '🔒' : '👁️' }}
       </span>
     </div>
