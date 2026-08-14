@@ -25,6 +25,11 @@
       {{ loading ? 'Entrando...' : 'Entrar' }}
     </button>
 
+    <!-- ÁREA DE DEBUG -->
+    <div style="margin-top: 15px; padding: 10px; background: #f4f4f4; border-radius: 8px; font-size: 12px; text-align: left; word-break: break-all; border: 1px solid #ddd;">
+      <strong>🔍 Debug:</strong> {{ debugInfo }}
+    </div>
+
     <div class="login-links" style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
       <a routerLink="/registrar" class="link">Criar conta</a>
       <a routerLink="/esqueci-senha" class="link">Esqueci a senha</a>

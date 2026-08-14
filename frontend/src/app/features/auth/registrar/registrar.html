@@ -12,10 +12,17 @@
     </div>
 
     <form (ngSubmit)="cadastrar()">
+      <!-- Campo Nome Completo -->
+      <div class="form-group">
+        <input type="text" [(ngModel)]="usuario.nome" name="nome" placeholder="Nome Completo" required>
+      </div>
+
+      <!-- Campo E-mail (username) -->
       <div class="form-group">
         <input type="text" [(ngModel)]="usuario.username" name="username" placeholder="E-mail" required>
       </div>
 
+      <!-- Campo Senha (password) -->
       <div class="form-group password-field" style="position: relative; width: 100%;">
         <input [type]="hidePassword ? 'password' : 'text'"
                [(ngModel)]="usuario.password"
@@ -34,6 +41,11 @@
         {{ carregando ? 'Criando conta...' : 'Cadastrar' }}
       </button>
     </form>
+
+    <!-- DEPURAÇÃO VISUAL - Mostra o objeto na tela -->
+    <pre style="background: #f4f4f4; padding: 10px; border-radius: 8px; text-align: left; font-size: 12px; overflow-x: auto; margin-top: 15px; border: 1px solid #ddd;">
+      {{ usuario | json }}
+    </pre>
 
     <div class="links-container">
       <a routerLink="/login" class="link">Já tem uma conta? Entrar</a>

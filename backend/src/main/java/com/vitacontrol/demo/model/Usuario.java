@@ -20,12 +20,16 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String nome;  // ← CAMPO ADICIONADO
+
     // Construtores
     public Usuario() {}
 
-    public Usuario(String username, String password) {
+    public Usuario(String username, String password, String nome) {
         this.username = username;
         this.password = password;
+        this.nome = nome;
     }
 
     // Getters e Setters
@@ -40,10 +44,13 @@ public class Usuario implements UserDetails {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
+    public String getNome() { return nome; }  // ← GETTER ADICIONADO
+    public void setNome(String nome) { this.nome = nome; }  // ← SETTER ADICIONADO
+
     // Métodos obrigatórios do UserDetails (Spring Security)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(); // Escopo simples sem roles complexas por enquanto
+        return List.of();
     }
 
     @Override

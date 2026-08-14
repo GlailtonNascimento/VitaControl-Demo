@@ -16,23 +16,31 @@ export class LoginComponent {
   errorMessage: string = '';
   loading: boolean = false;
   hidePassword = true;
+  debugInfo: string = ''; // ← PARA EXIBIR NA TELA
 
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
     this.loading = true;
     this.errorMessage = '';
+    this.debugInfo = 'Enviando requisição...';
 
     this.authService.login(this.usuario).subscribe({
       next: (res: any) => {
         this.loading = false;
-        if (res.token) {
+        this.debugInfo = 'Resposta recebida: ' + JSON.stringify(res);
+        if (res && res.token) {
           localStorage.setItem('token', res.token);
+          this.debugInfo = 'Token salvo! Redirecionando...';
           this.router.navigate(['/dashboard']);
+        } else {
+          this.errorMessage = 'Resposta inválida do servidor.';
+          this.debugInfo = 'Erro: token não encontrado na resposta.';
         }
       },
       error: (err: any) => {
         this.loading = false;
+        this.debugInfo = 'Erro: ' + (err.status || 'sem status');
         this.errorMessage = 'Usuário ou senha incorretos.';
       }
     });

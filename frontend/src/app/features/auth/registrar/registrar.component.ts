@@ -12,7 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./registrar.css']
 })
 export class RegistrarComponent {
-  usuario = { username: '', password: '' };  // ← ajustado
+  usuario = { nome: '', username: '', password: '' };  // ← ADICIONADO 'nome'
   mensagemErro: string = '';
   mensagemSucesso: string = '';
   carregando: boolean = false;
@@ -31,7 +31,7 @@ export class RegistrarComponent {
         this.mensagemSucesso = 'Cadastro realizado com sucesso!';
         setTimeout(() => {
           this.router.navigate(['/login']);
-        }, 2000);
+        }, 1500);  // ← REDUZIDO PARA 1.5s (mais rápido)
       },
       error: (err: any) => {
         this.carregando = false;
