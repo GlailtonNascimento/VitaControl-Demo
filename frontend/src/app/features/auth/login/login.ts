@@ -16,7 +16,7 @@ export class LoginComponent {
   errorMessage: string = '';
   loading: boolean = false;
   hidePassword = true;
-  debugInfo: string = ''; // ← PARA EXIBIR NA TELA
+  debugInfo: string = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -31,6 +31,7 @@ export class LoginComponent {
         this.debugInfo = 'Resposta recebida: ' + JSON.stringify(res);
         if (res && res.token) {
           localStorage.setItem('token', res.token);
+          alert('✅ Token salvo com sucesso!'); // ← ALERTA VISUAL
           this.debugInfo = 'Token salvo! Redirecionando...';
           this.router.navigate(['/dashboard']);
         } else {
