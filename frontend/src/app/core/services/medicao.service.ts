@@ -28,8 +28,6 @@ export class MedicaoService {
   }
 
   dashboard(): Observable<any> {
-    const token = localStorage.getItem('token');
-    alert('🔑 Token usado: ' + token + '\n📡 URL: ' + this.apiUrl + '/medicoes/dashboard');
     return this.http.get(`${this.apiUrl}/medicoes/dashboard`, { headers: this.getHeaders() });
   }
 }

@@ -12,6 +12,7 @@ import { MedicaoService } from '../../core/services/medicao.service';
       <h1 style="text-align: center;">🚀 Bem-vindo ao Dashboard</h1>
       <p style="text-align: center; color: #555;">Acompanhamento de Pressão Arterial</p>
 
+      <!-- Card de status -->
       <div *ngIf="dashboard" style="margin: 30px 0; padding: 25px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"
            [style.background]="getCorFundo()" [style.color]="getCorTexto()">
         <div style="font-size: 48px; margin-bottom: 8px;">{{ getIcone() }}</div>
@@ -25,13 +26,13 @@ import { MedicaoService } from '../../core/services/medicao.service';
         </div>
       </div>
 
-      <pre style="background: #f4f4f4; padding: 10px; border-radius: 8px; font-size: 12px; text-align: left; overflow-x: auto; border: 1px solid #ddd; margin-top: 20px;">
-        {{ dashboard | json }}
-      </pre>
-
-      <div style="text-align: center; margin-top: 20px;">
+      <!-- Botões com espaçamento de 30px -->
+      <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px; flex-wrap: wrap;">
         <a routerLink="/medicoes" style="display: inline-block; padding: 12px 24px; background: #007bff; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
           ➕ Ir para Minhas Medições
+        </a>
+        <a routerLink="/grafico" style="display: inline-block; padding: 12px 24px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+          📈 Ver Gráficos
         </a>
       </div>
     </div>
@@ -47,20 +48,16 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    alert('🟢 Dashboard foi carregado!');
     this.carregarDashboard();
   }
 
   carregarDashboard() {
-    alert('🔄 Tentando carregar dados...');
     this.medicaoService.dashboard().subscribe({
       next: (data: any) => {
-        alert('✅ Dados recebidos! Conteúdo: ' + JSON.stringify(data));
         this.dashboard = data;
-        this.cdr.detectChanges(); // ← FORÇA ATUALIZAÇÃO DA TELA
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
-        alert('❌ Erro: ' + err.status);
         console.error('Erro ao carregar dashboard:', err);
       }
     });
