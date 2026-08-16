@@ -1,103 +1,188 @@
-## 📊 **Atualização – 15 de agosto de 2026**
+# VitaControl – Documentação do Projeto
 
-### ✅ **Novas Funcionalidades Implementadas**
-
-#### 1. Dashboard com Classificação Visual de Pressão
-- **Card de status** com fundo colorido:
-  - 🟢 **Normal** (verde)
-  - 🟡 **Pré-hipertensão** (amarelo)
-  - 🔴 **Hipertensão** (vermelho)
-- **Ícone** correspondente ao status (✅, ⚠️, 🚨)
-- **Mensagem personalizada** com orientações práticas para o usuário:
-  - *Normal:* "Sua pressão está normal. Continue com hábitos saudáveis! 💚"
-  - *Pré-hipertensão:* "Atenção: sua pressão está elevada. Adote mudanças no estilo de vida (menos sal, exercícios, perda de peso). 🟡"
-  - *Hipertensão:* "Sua pressão está alta. Consulte um médico o mais breve possível. 🔴"
-- **Exibição das médias** de Sistólica, Diastólica, Pulsação e total de medições.
-
-#### 2. Classificação Individual nas Medições
-- Cada medição na lista exibe um **selo** com a classificação (Normal, Pré-hipertensão, Hipertensão) com cores de fundo e texto.
-- Baseada nas **novas diretrizes de cardiologia**:
-  - Normal: < 120/80 mmHg
-  - Pré-hipertensão: 120–139/80–89 mmHg
-  - Hipertensão: ≥ 140/90 mmHg
-
-#### 3. Correção do Fuso Horário
-- Data/hora das medições agora são salvas no **horário de Brasília (UTC-3)**.
-- Configuração no backend: `LocalDateTime.now(ZoneId.of("America/Sao_Paulo"))`.
-
-#### 4. Token JWT Fixo
-- Chave secreta do JWT definida no `application.properties` (`jwt.secret`).
-- Tokens permanecem válidos mesmo após reiniciar o backend.
+**Versão:** 1.0.0-rc.2  
+**Data:** 16 de agosto de 2026  
+**Desenvolvedor:** Glailton Nascimento  
+**Repositório:** https://github.com/GlailtonNascimento/VitaControl-Demo  
 
 ---
 
-### 🛠️ **Correções e Ajustes Técnicos**
+## 📌 Resumo do Projeto
 
-| Problema | Solução |
-|----------|---------|
-| Dashboard com `null` | Adicionado `ChangeDetectorRef.detectChanges()` para forçar atualização da tela. |
-| Token expirando ao reiniciar o backend | Chave JWT fixa no `application.properties`. |
-| Data/hora errada (UTC) | Fuso horário alterado para `America/Sao_Paulo` no backend. |
-| CORS bloqueando requisições | `@CrossOrigin(originPatterns = "*")` no controller. |
+O **VitaControl** é um sistema de acompanhamento de pressão arterial e gerenciamento de medicamentos, desenvolvido para auxiliar pacientes hipertensos e diabéticos no controle diário de sua saúde. O sistema oferece:
+
+- Cadastro seguro com nome, e-mail e senha.
+- Login com autenticação JWT.
+- Recuperação de senha por e-mail (código de 6 dígitos via SendGrid).
+- Registro de medições de pressão (sistólica, diastólica, pulsação, contexto).
+- Dashboard com classificação visual (Normal, Pré-hipertensão, Hipertensão).
+- Gráficos semanais, mensais e anuais.
+- (Em breve) Controle de medicamentos, alertas contextuais e relatórios.
 
 ---
 
-### 📌 **Pendências (Próximos Passos)**
+## 🛠️ Tecnologias Utilizadas
+
+| Camada | Tecnologia |
+|--------|------------|
+| Backend | Java 21, Spring Boot 3.2.5, Maven, JPA/Hibernate, PostgreSQL |
+| Frontend | Angular 16, TypeScript, Chart.js, HTML/CSS |
+| Autenticação | JWT + Spring Security |
+| Envio de e-mail | SendGrid API |
+| Ambiente de desenvolvimento | Termux (Android) |
+| Versionamento | Git + GitHub |
+
+---
+
+## 📁 Estrutura de Diretórios
+
+```
+
+VitaControl-Demo/
+├── backend/
+│   ├── src/main/java/com/vitacontrol/demo/
+│   │   ├── controller/         # Controllers (MedicaoController, etc.)
+│   │   ├── model/              # Entidades (Usuario, CodigoRecuperacao, MedicaoPressao)
+│   │   ├── repository/         # Repositórios JPA
+│   │   ├── security/           # Configurações de segurança, JWT, AuthController
+│   │   ├── service/            # Serviços (EmailService)
+│   │   └── VitaControlDemoApplication.java
+│   ├── src/main/resources/
+│   │   ├── application.properties
+│   │   └── ...
+│   └── pom.xml
+├── frontend/
+│   ├── src/app/
+│   │   ├── core/services/      # AuthService, MedicaoService
+│   │   ├── features/
+│   │   │   ├── auth/           # Login, Registrar, Recuperar-senha
+│   │   │   ├── dashboard/      # DashboardComponent
+│   │   │   ├── medicoes/       # MedicoesComponent
+│   │   │   └── grafico/        # GraficoComponent (Chart.js)
+│   │   ├── app.routes.ts
+│   │   └── ...
+│   ├── angular.json
+│   └── package.json
+└── README.md
+
+```
+
+---
+
+## ✅ Funcionalidades Concluídas (≈ 80% do projeto)
+
+| Funcionalidade | Status | Detalhe |
+|----------------|--------|---------|
+| Cadastro de usuário | ✅ 100% | Com nome, e-mail e senha (mínimo 6 caracteres). |
+| Login com JWT | ✅ 100% | Token salvo no localStorage e redirecionamento para dashboard. |
+| Recuperação de senha | ✅ 100% | Código de 6 dígitos enviado por e-mail (SendGrid). |
+| CRUD de medições | ✅ 100% | Inserir, listar, dashboard com médias e status. |
+| Dashboard visual | ✅ 100% | Cores, ícones e mensagens personalizadas (Normal, Pré-hipertensão, Hipertensão). |
+| Gráficos | ✅ 100% | Semanal, mensal e anual com Chart.js. |
+| Interface limpa | ✅ 100% | Sem alerts de depuração, botões espaçados. |
+| Fuso horário | ✅ 100% | Corrigido para Brasília (UTC-3). |
+| Token JWT fixo | ✅ 100% | Chave secreta definida no `application.properties`. |
+| Versionamento | ✅ 100% | Código sincronizado e documentado no GitHub. |
+
+---
+
+## ⏳ Pendências (≈ 20% restante)
 
 | Funcionalidade | Prioridade | Descrição |
 |----------------|------------|-----------|
-| **Gráficos no Dashboard** | Alta | Exibir evolução da pressão com Chart.js. |
-| **Controle de Medicamentos** | Média | CRUD de medicamentos, horários, histórico de esquecimentos. |
-| **Correlação de dados** | Baixa | Relacionar esquecimentos com picos de pressão. |
-| **Remover alerts de depuração** | Baixa | Remover `alert()` do código após testes. |
-| **Remover bloco de debug do dashboard** | Baixa | Remover `<pre>` com JSON do template. |
+| Controle de Medicamentos | Alta | CRUD (nome, dosagem, horário, frequência) + histórico de tomada. |
+| Alertas Contextuais | Alta | Dicas pós-medição (hidratação, descanso, postura) e alerta de horário de medicamento. |
+| Relatórios e Filtros | Média | Filtrar medições por dia/mês/ano e opção de imprimir/exportar. |
 
 ---
 
-### 📁 **Arquivos Alterados nesta Sessão**
+## 📊 Progresso Geral
 
-| Arquivo | Descrição |
-|---------|-----------|
-| `backend/src/main/resources/application.properties` | Adição da chave JWT fixa e fuso horário. |
-| `backend/src/main/java/.../MedicaoController.java` | Correção do fuso horário. |
-| `frontend/src/app/features/dashboard/dashboard.component.ts` | Dashboard com classificação visual. |
-| `frontend/src/app/features/medicoes/medicoes.component.ts` | Lista de medições com selo individual. |
-| `frontend/src/app/core/services/medicao.service.ts` | Serviço para medições (criado). |
-| `frontend/src/app/app.routes.ts` | Adição da rota `/medicoes`. |
+- **80% do projeto concluído**
+- Faltam principalmente os módulos de **medicamentos**, **alertas** e **relatórios** para atingir 100%.
 
 ---
 
-### 🧪 **Como Testar as Novas Funcionalidades**
+## 🚀 Próximos Passos
 
-1. **Acesse o dashboard:** `http://localhost:4200/dashboard`
-   - O card de status deve aparecer com cor, ícone e mensagem.
-2. **Acesse a lista de medições:** `http://localhost:4200/medicoes`
-   - Cada medição deve ter um selo com a classificação.
-3. **Inserir uma nova medição** – a data/hora deve aparecer no horário de Brasília.
-4. **Reiniciar o backend** – o token JWT deve continuar válido.
+1. Implementar **CRUD de medicamentos** (backend + frontend).
+2. Integrar **alertas contextuais** com medições e medicamentos.
+3. Criar **tela de relatórios** com filtros e impressão.
 
 ---
 
-### ✅ **Status Geral do Projeto**
+## 🧪 Como Rodar o Projeto (para testes locais)
 
-| Funcionalidade | Status |
-|----------------|--------|
-| Cadastro com nome | ✅ 100% |
-| Login com JWT | ✅ 100% |
-| Recuperação de senha (e-mail real) | ✅ 100% |
-| CRUD de medições | ✅ 100% |
-| Dashboard com classificação visual | ✅ 100% |
-| Listagem com status individual | ✅ 100% |
-| Fuso horário corrigido | ✅ 100% |
-| Token JWT fixo | ✅ 100% |
-| Código versionado | ✅ 100% |
-| Documentação atualizada | ✅ 100% |
+### Pré-requisitos
+- Java 21, Maven, Node.js 18+, PostgreSQL (ou banco na nuvem).
+
+### Backend
+```bash
+cd backend
+mvn clean package -DskipTests
+java -jar target/vitacontrol-demo-0.0.1-SNAPSHOT.jar \
+  --spring.datasource.url="jdbc:postgresql://..." \
+  --spring.datasource.username="..." \
+  --spring.datasource.password="..."
+```
+
+Frontend
+
+```bash
+cd frontend
+npm install
+npx ng serve --host 0.0.0.0
+```
+
+Acesso
+
+· Frontend: http://localhost:4200
+· API: http://localhost:8080/api
 
 ---
 
-### 🚀 **Próxima Sessão de Desenvolvimento**
+📝 Histórico de Commits (Principais)
 
-- **Implementar gráficos** no dashboard (Chart.js).
-- **Controle de medicamentos** (tabela, CRUD, histórico).
-- **Melhorar a interface** com CSS refinado e responsividade.
+Data Commit Descrição
+11/08 3d274fa Ajustes visuais e correções no cadastro/login
+14/08 6eafe1b Recuperação de senha com SendGrid + ajustes finos
+14/08 8dd8cd7 Dashboard com classificação visual de pressão
+15/08 b3de655 Atualização da documentação
+16/08 a047224 Ajustes finos no dashboard, gráficos, remoção de alerts
 
+---
+
+📌 Observações Finais
+
+· O sistema está estável e pronto para uso em ambiente de teste.
+· A documentação será atualizada conforme novas funcionalidades forem adicionadas.
+· Qualquer dúvida, consulte o repositório ou entre em contato com o desenvolvedor.
+
+---
+
+Última atualização: 16 de agosto de 2026
+
+```
+
+---
+
+### 🔧 **Como aplicar:**
+
+1. **Abra o arquivo:**
+   ```bash
+   nano ~/VitaControl-Demo/VitaControl-Documentacao.md
+```
+
+2. Apague todo o conteúdo e cole o texto acima.
+3. Salve (Ctrl+O, Enter) e saia (Ctrl+X).
+4. Commit e push:
+   ```bash
+   cd ~/VitaControl-Demo
+   git add VitaControl-Documentacao.md
+   git commit -m "Atualiza documentação completa (16/08/2026)"
+   git push origin main
+   ```
+
+---
+
+Pronto! A documentação completa está no GitHub. 🚀
