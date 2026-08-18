@@ -184,4 +184,29 @@ public class MedicaoController {
                     .body("Erro ao gerar gráfico anual: " + e.getMessage());
         }
     }
+
+    // ==================== RELATÓRIOS E FILTROS ====================
+
+    @GetMapping("/medicoes/filtro")
+    public ResponseEntity<?> filtrarMedicoes(
+            @RequestParam(required = false) String dataInicio,
+            @RequestParam(required = false) String dataFim) {
+        try {
+            Usuario usuarioLogado = getUsuarioAutenticado();
+            List<MedicaoPressao> medicoes;
+
+            if (dataInicio == null && dataFim == null) {
+                medicoes = repository.findByUsuarioOrderByDataHoraDesc(usuarioLogado);
+            } else {
+                LocalDateTime inicio = dataInicio != null ? LocalDateTime.parse(dataInicio + "T00:00:00") : LocalDateTime.MIN;
+                LocalDateTime fim = dataFim != null ? LocalDateTime.parse(dataFim + "T23:59:59") : LocalDateTime.MAX;
+                medicoes = repository.findByUsuarioAndDataHoraBetweenOrderByDataHoraDesc(usuarioLogado, inicio, fim);
+            }
+
+            return ResponseEntity.ok(medicoes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao filtrar medições: " + e.getMessage());
+        }
+    }
 }

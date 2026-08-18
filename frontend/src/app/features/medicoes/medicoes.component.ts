@@ -1,18 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { MedicaoService } from '../../core/services/medicao.service';
+import { MedicamentoService } from '../../core/services/medicamento.service';
 
 @Component({
   selector: 'app-medicoes',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div style="max-width: 700px; margin: 0 auto; padding: 20px; font-family: 'Segoe UI', sans-serif;">
       <h2>📊 Minhas Medições</h2>
 
-      <!-- Formulário de inserção -->
-      <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+      <!-- Formulário -->
+      <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
         <h3>Nova Medição</h3>
         <div style="display: flex; flex-wrap: wrap; gap: 10px;">
           <input type="number" [(ngModel)]="nova.sistolica" placeholder="Sistólica" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
@@ -23,19 +25,19 @@ import { MedicaoService } from '../../core/services/medicao.service';
         <button (click)="salvar()" [disabled]="carregando" style="margin-top:12px; padding:12px 24px; background:#007bff; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600;">
           {{ carregando ? 'Salvando...' : 'Salvar Medição' }}
         </button>
-        <div *ngIf="mensagem" style="margin-top:12px; padding:12px; border-radius:8px;" 
-             [style.background]="mensagemErro ? '#ffebee' : '#e8f5e9'" 
+        <div *ngIf="mensagem" style="margin-top:12px; padding:12px; border-radius:8px; white-space: pre-line;"
+             [style.background]="mensagemErro ? '#ffebee' : '#e8f5e9'"
              [style.color]="mensagemErro ? '#c62828' : '#2e7d32'">
           {{ mensagem }}
         </div>
       </div>
 
-      <!-- Listagem -->
+      <!-- Histórico -->
       <h3>📋 Histórico</h3>
       <div *ngIf="medicoes.length === 0" style="text-align:center; color:#888; padding:30px 0;">
         Nenhuma medição registrada.
       </div>
-      <div *ngFor="let m of medicoes" style="background: white; border:1px solid #e0e0e0; border-radius:12px; padding:16px; margin-bottom:12px; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+      <div *ngFor="let m of medicoes" style="background: white; border:1px solid #e0e0e0; border-radius:12px; padding:16px; margin-bottom:12px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
           <div>
             <strong>{{ m.dataHora | date:'dd/MM/yyyy HH:mm' }}</strong>
@@ -52,6 +54,13 @@ import { MedicaoService } from '../../core/services/medicao.service';
           📝 {{ m.contexto }}
         </div>
       </div>
+
+      <!-- Botão Voltar -->
+      <div style="text-align: center; margin-top: 30px;">
+        <a routerLink="/dashboard" style="display: inline-block; padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">
+          ← Voltar ao Dashboard
+        </a>
+      </div>
     </div>
   `,
   styles: []
@@ -63,7 +72,10 @@ export class MedicoesComponent implements OnInit {
   mensagem = '';
   mensagemErro = false;
 
-  constructor(private medicaoService: MedicaoService) {}
+  constructor(
+    private medicaoService: MedicaoService,
+    private medicamentoService: MedicamentoService
+  ) {}
 
   ngOnInit() {
     this.listar();
@@ -81,11 +93,44 @@ export class MedicoesComponent implements OnInit {
 
     this.medicaoService.salvar(this.nova).subscribe({
       next: () => {
-        this.mensagem = 'Medição salva com sucesso!';
-        this.mensagemErro = false;
-        this.nova = { sistolica: null, diastolica: null, pulsacao: null, contexto: '' };
-        this.listar();
-        this.carregando = false;
+        let msg = '✅ Medição salva com sucesso!';
+
+        // Dica pós-medição
+        const dica = this.obterDica(this.nova.sistolica, this.nova.diastolica);
+        msg += ' ' + dica;
+
+        // Verifica medicamento próximo
+        this.medicamentoService.listar().subscribe({
+          next: (medicamentos: any[]) => {
+            const agora = new Date();
+            const minutosAgora = agora.getHours() * 60 + agora.getMinutes();
+
+            const medicamentoProximo = medicamentos.find(m => {
+              const [hMed, mMed] = m.horario.split(':').map(Number);
+              const minutosMed = hMed * 60 + mMed;
+              const diff = minutosMed - minutosAgora;
+              return diff >= 0 && diff <= 60;
+            });
+
+            if (medicamentoProximo) {
+              msg += ` ⏰ Alerta: Está próximo do horário do seu medicamento (${medicamentoProximo.nome}) às ${medicamentoProximo.horario}.`;
+            }
+
+            this.mensagem = msg;
+            this.mensagemErro = false;
+            this.nova = { sistolica: null, diastolica: null, pulsacao: null, contexto: '' };
+            this.listar();
+            this.carregando = false;
+          },
+          error: () => {
+            // Se falhar ao buscar medicamentos, exibe só a dica
+            this.mensagem = msg;
+            this.mensagemErro = false;
+            this.nova = { sistolica: null, diastolica: null, pulsacao: null, contexto: '' };
+            this.listar();
+            this.carregando = false;
+          }
+        });
       },
       error: (err) => {
         this.mensagem = 'Erro ao salvar medição. Tente novamente.';
@@ -103,7 +148,18 @@ export class MedicoesComponent implements OnInit {
     });
   }
 
-  // Funções de classificação individual (baseadas nas novas diretrizes)
+  // ========== Dica pós-medição ==========
+  obterDica(sistolica: number, diastolica: number): string {
+    if (sistolica >= 140 || diastolica >= 90) {
+      return '🚨 Pressão alta! Descanse, eleve as pernas e beba água. Evite esforços. Consulte um médico.';
+    } else if (sistolica >= 120 || diastolica >= 80) {
+      return '⚠️ Pressão elevada. Reduza o sal, pratique exercícios e mantenha o peso.';
+    } else {
+      return '✅ Pressão normal. Continue com hábitos saudáveis!';
+    }
+  }
+
+  // ========== Funções de classificação individual ==========
   getStatus(medicao: any): string {
     const s = medicao.sistolica;
     const d = medicao.diastolica;

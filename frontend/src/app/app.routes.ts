@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 import { RegistrarComponent } from './features/auth/registrar/registrar.component';
 import { LoginComponent } from './features/auth/login/login';
@@ -5,6 +6,7 @@ import { RecuperarSenha } from './features/auth/recuperar-senha/recuperar-senha'
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { MedicoesComponent } from './features/medicoes/medicoes.component';
 import { GraficoComponent } from './features/grafico/grafico.component';
+import { MedicamentosComponent } from './features/medicamentos/medicamentos.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -13,5 +15,6 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'medicoes', component: MedicoesComponent },
   { path: 'grafico', component: GraficoComponent },
-  { path: '', redirectTo: 'login', pathMatch: 'full' }
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'medicamentos', component: MedicamentosComponent },
 ];

@@ -34,6 +34,9 @@ import { MedicaoService } from '../../core/services/medicao.service';
         <a routerLink="/grafico" style="display: inline-block; padding: 12px 24px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
           📈 Ver Gráficos
         </a>
+        <a routerLink="/medicamentos" style="display: inline-block; padding: 12px 24px; background: #ffc107; color: #333; text-decoration: none; border-radius: 8px; font-weight: 600;">
+          💊 Medicamentos
+        </a>
       </div>
     </div>
   `,
