@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.vitacontrol.demo.dto.DashboardResponseDTO;
 import com.vitacontrol.demo.dto.MedicaoRequestDTO;
+import com.vitacontrol.demo.dto.MedicaoResponseDTO;
 import com.vitacontrol.demo.model.MedicaoPressao;
 import com.vitacontrol.demo.model.Usuario;
 import com.vitacontrol.demo.repository.MedicaoPressaoRepository;
@@ -21,7 +22,7 @@ import com.vitacontrol.demo.repository.UsuarioRepository;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${cors.allowed.origin}")
 @RestController
 @RequestMapping("/api")
 public class MedicaoController {
@@ -55,7 +56,19 @@ public class MedicaoController {
                     dto.getContexto()
             );
             repository.save(medicao);
-            return ResponseEntity.status(HttpStatus.CREATED).body(medicao);
+
+            MedicaoResponseDTO responseDTO = new MedicaoResponseDTO(
+                    medicao.getId(),
+                    medicao.getUsuario().getId(),
+                    medicao.getUsuario().getUsername(),
+                    medicao.getUsuario().getNome(),
+                    medicao.getDataHora(),
+                    medicao.getSistolica() != null ? medicao.getSistolica().intValue() : null,
+                    medicao.getDiastolica() != null ? medicao.getDiastolica().intValue() : null,
+                    medicao.getPulsacao() != null ? medicao.getPulsacao().intValue() : null,
+                    medicao.getContexto()
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao salvar: " + e.getMessage());
         }
@@ -67,7 +80,21 @@ public class MedicaoController {
         try {
             Usuario usuarioLogado = getUsuarioAutenticado();
             List<MedicaoPressao> medicoes = repository.findByUsuarioOrderByDataHoraDesc(usuarioLogado);
-            return ResponseEntity.ok(medicoes);
+
+            List<MedicaoResponseDTO> responseDTOs = medicoes.stream()
+                .map(m -> new MedicaoResponseDTO(
+                    m.getId(),
+                    m.getUsuario().getId(),
+                    m.getUsuario().getUsername(),
+                    m.getUsuario().getNome(),
+                    m.getDataHora(),
+                    m.getSistolica() != null ? m.getSistolica().intValue() : null,
+                    m.getDiastolica() != null ? m.getDiastolica().intValue() : null,
+                    m.getPulsacao() != null ? m.getPulsacao().intValue() : null,
+                    m.getContexto()
+                ))
+                .toList();
+            return ResponseEntity.ok(responseDTOs);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao buscar medições: " + e.getMessage());
@@ -86,9 +113,9 @@ public class MedicaoController {
             }
 
             long total = medicoes.size();
-            double mediaSis = medicoes.stream().mapToInt(MedicaoPressao::getSistolica).average().orElse(0.0);
-            double mediaDia = medicoes.stream().mapToInt(MedicaoPressao::getDiastolica).average().orElse(0.0);
-            double mediaPul = medicoes.stream().mapToInt(MedicaoPressao::getPulsacao).average().orElse(0.0);
+            double mediaSis = medicoes.stream().mapToInt(m -> m.getSistolica() != null ? m.getSistolica().intValue() : 0).average().orElse(0.0);
+            double mediaDia = medicoes.stream().mapToInt(m -> m.getDiastolica() != null ? m.getDiastolica().intValue() : 0).average().orElse(0.0);
+            double mediaPul = medicoes.stream().mapToInt(m -> m.getPulsacao() != null ? m.getPulsacao().intValue() : 0).average().orElse(0.0);
 
             String statusGeral;
             if (mediaSis >= 140 || mediaDia >= 90) {
@@ -129,8 +156,8 @@ public class MedicaoController {
 
             Map<String, Object> resultado = new LinkedHashMap<>();
             resultado.put("labels", semana.stream().map(m -> m.getDataHora().toLocalDate().toString()).toList());
-            resultado.put("sistolica", semana.stream().map(MedicaoPressao::getSistolica).toList());
-            resultado.put("diastolica", semana.stream().map(MedicaoPressao::getDiastolica).toList());
+            resultado.put("sistolica", semana.stream().map(m -> m.getSistolica() != null ? m.getSistolica().intValue() : 0).toList());
+            resultado.put("diastolica", semana.stream().map(m -> m.getDiastolica() != null ? m.getDiastolica().intValue() : 0).toList());
 
             return ResponseEntity.ok(resultado);
         } catch (Exception e) {
@@ -152,8 +179,8 @@ public class MedicaoController {
 
             Map<String, Object> resultado = new LinkedHashMap<>();
             resultado.put("labels", mes.stream().map(m -> m.getDataHora().toLocalDate().toString()).toList());
-            resultado.put("sistolica", mes.stream().map(MedicaoPressao::getSistolica).toList());
-            resultado.put("diastolica", mes.stream().map(MedicaoPressao::getDiastolica).toList());
+            resultado.put("sistolica", mes.stream().map(m -> m.getSistolica() != null ? m.getSistolica().intValue() : 0).toList());
+            resultado.put("diastolica", mes.stream().map(m -> m.getDiastolica() != null ? m.getDiastolica().intValue() : 0).toList());
 
             return ResponseEntity.ok(resultado);
         } catch (Exception e) {
@@ -175,8 +202,8 @@ public class MedicaoController {
 
             Map<String, Object> resultado = new LinkedHashMap<>();
             resultado.put("labels", ano.stream().map(m -> m.getDataHora().toLocalDate().toString()).toList());
-            resultado.put("sistolica", ano.stream().map(MedicaoPressao::getSistolica).toList());
-            resultado.put("diastolica", ano.stream().map(MedicaoPressao::getDiastolica).toList());
+            resultado.put("sistolica", ano.stream().map(m -> m.getSistolica() != null ? m.getSistolica().intValue() : 0).toList());
+            resultado.put("diastolica", ano.stream().map(m -> m.getDiastolica() != null ? m.getDiastolica().intValue() : 0).toList());
 
             return ResponseEntity.ok(resultado);
         } catch (Exception e) {
@@ -203,10 +230,24 @@ public class MedicaoController {
                 medicoes = repository.findByUsuarioAndDataHoraBetweenOrderByDataHoraDesc(usuarioLogado, inicio, fim);
             }
 
-            return ResponseEntity.ok(medicoes);
+            List<MedicaoResponseDTO> responseDTOs = medicoes.stream()
+                .map(m -> new MedicaoResponseDTO(
+                    m.getId(),
+                    m.getUsuario().getId(),
+                    m.getUsuario().getUsername(),
+                    m.getUsuario().getNome(),
+                    m.getDataHora(),
+                    m.getSistolica() != null ? m.getSistolica().intValue() : null,
+                    m.getDiastolica() != null ? m.getDiastolica().intValue() : null,
+                    m.getPulsacao() != null ? m.getPulsacao().intValue() : null,
+                    m.getContexto()
+                ))
+                .toList();
+            return ResponseEntity.ok(responseDTOs);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao filtrar medições: " + e.getMessage());
         }
     }
 }
+

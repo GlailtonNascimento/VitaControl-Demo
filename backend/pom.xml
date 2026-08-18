@@ -86,13 +86,6 @@
             <version>2.5.0</version>
         </dependency>
 
-        <!-- Bucket4j (Rate Limiting) -->
-        <dependency>
-            <groupId>com.bucket4j</groupId>
-            <artifactId>bucket4j-core</artifactId>
-            <version>8.10.1</version>
-        </dependency>
-
         <!-- Spring Boot Mail -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -105,7 +98,7 @@
             <artifactId>jakarta.mail</artifactId>
         </dependency>
 
-        <!-- SendGrid (envio de e-mails real) -->
+        <!-- SendGrid (envio de e-mails) -->
         <dependency>
             <groupId>com.sendgrid</groupId>
             <artifactId>sendgrid-java</artifactId>

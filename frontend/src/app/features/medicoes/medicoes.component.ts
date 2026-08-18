@@ -14,18 +14,18 @@ import { MedicamentoService } from '../../core/services/medicamento.service';
       <h2>📊 Minhas Medições</h2>
 
       <!-- Formulário -->
-      <div style="background: #f9f9f9; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+      <div style="background: var(--card-bg, #f9f9f9); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color, #ddd);">
         <h3>Nova Medição</h3>
         <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <input type="number" [(ngModel)]="nova.sistolica" placeholder="Sistólica" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
-          <input type="number" [(ngModel)]="nova.diastolica" placeholder="Diastólica" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
-          <input type="number" [(ngModel)]="nova.pulsacao" placeholder="Pulsação" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
-          <input type="text" [(ngModel)]="nova.contexto" placeholder="Contexto (opcional)" style="flex:2; padding:10px; border:1px solid #ddd; border-radius:8px;">
+          <input type="number" [(ngModel)]="nova.sistolica" placeholder="Sistólica" style="flex:1; padding:10px; border:1px solid var(--border-color, #ddd); border-radius:8px; background: var(--card-bg, white); color: var(--text-color, #333);">
+          <input type="number" [(ngModel)]="nova.diastolica" placeholder="Diastólica" style="flex:1; padding:10px; border:1px solid var(--border-color, #ddd); border-radius:8px; background: var(--card-bg, white); color: var(--text-color, #333);">
+          <input type="number" [(ngModel)]="nova.pulsacao" placeholder="Pulsação" style="flex:1; padding:10px; border:1px solid var(--border-color, #ddd); border-radius:8px; background: var(--card-bg, white); color: var(--text-color, #333);">
+          <input type="text" [(ngModel)]="nova.contexto" placeholder="Contexto (opcional)" style="flex:2; padding:10px; border:1px solid var(--border-color, #ddd); border-radius:8px; background: var(--card-bg, white); color: var(--text-color, #333);">
         </div>
-        <button (click)="salvar()" [disabled]="carregando" style="margin-top:12px; padding:12px 24px; background:#007bff; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600;">
+        <button (click)="salvar()" [disabled]="carregando" class="btn btn-primary" style="margin-top:12px; padding:12px 24px; border:none; border-radius:8px; cursor:pointer; font-weight:600;">
           {{ carregando ? 'Salvando...' : 'Salvar Medição' }}
         </button>
-        <div *ngIf="mensagem" style="margin-top:12px; padding:12px; border-radius:8px; white-space: pre-line;"
+        <div *ngIf="mensagem" style="margin-top:12px; padding:12px; border-radius:8px;"
              [style.background]="mensagemErro ? '#ffebee' : '#e8f5e9'"
              [style.color]="mensagemErro ? '#c62828' : '#2e7d32'">
           {{ mensagem }}
@@ -34,10 +34,10 @@ import { MedicamentoService } from '../../core/services/medicamento.service';
 
       <!-- Histórico -->
       <h3>📋 Histórico</h3>
-      <div *ngIf="medicoes.length === 0" style="text-align:center; color:#888; padding:30px 0;">
+      <div *ngIf="medicoes.length === 0" style="text-align:center; color: var(--text-muted, #888); padding:30px 0;">
         Nenhuma medição registrada.
       </div>
-      <div *ngFor="let m of medicoes" style="background: white; border:1px solid #e0e0e0; border-radius:12px; padding:16px; margin-bottom:12px;">
+      <div *ngFor="let m of medicoes" style="background: var(--card-bg, white); border:1px solid var(--border-color, #e0e0e0); border-radius:12px; padding:16px; margin-bottom:12px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
           <div>
             <strong>{{ m.dataHora | date:'dd/MM/yyyy HH:mm' }}</strong>
@@ -50,14 +50,14 @@ import { MedicamentoService } from '../../core/services/medicamento.service';
         <div style="margin-top: 6px;">
           Sistólica: {{ m.sistolica }} mmHg | Diastólica: {{ m.diastolica }} mmHg | Pulsação: {{ m.pulsacao }} bpm
         </div>
-        <div *ngIf="m.contexto" style="font-size: 14px; color: #666; margin-top: 4px;">
+        <div *ngIf="m.contexto" style="font-size: 14px; color: var(--text-muted, #666); margin-top: 4px;">
           📝 {{ m.contexto }}
         </div>
       </div>
 
       <!-- Botão Voltar -->
       <div style="text-align: center; margin-top: 30px;">
-        <a routerLink="/dashboard" style="display: inline-block; padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">
+        <a routerLink="/dashboard" style="display: inline-block; padding: 10px 20px; background: var(--text-muted, #6c757d); color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">
           ← Voltar ao Dashboard
         </a>
       </div>
@@ -95,11 +95,9 @@ export class MedicoesComponent implements OnInit {
       next: () => {
         let msg = '✅ Medição salva com sucesso!';
 
-        // Dica pós-medição
         const dica = this.obterDica(this.nova.sistolica, this.nova.diastolica);
         msg += ' ' + dica;
 
-        // Verifica medicamento próximo
         this.medicamentoService.listar().subscribe({
           next: (medicamentos: any[]) => {
             const agora = new Date();
@@ -123,7 +121,6 @@ export class MedicoesComponent implements OnInit {
             this.carregando = false;
           },
           error: () => {
-            // Se falhar ao buscar medicamentos, exibe só a dica
             this.mensagem = msg;
             this.mensagemErro = false;
             this.nova = { sistolica: null, diastolica: null, pulsacao: null, contexto: '' };
@@ -142,13 +139,18 @@ export class MedicoesComponent implements OnInit {
   }
 
   listar() {
+    console.log('🔍 Token:', localStorage.getItem('token'));
     this.medicaoService.listar().subscribe({
-      next: (data) => { this.medicoes = data; },
-      error: (err) => { console.error('Erro ao listar:', err); }
+      next: (data) => {
+        console.log('✅ Dados recebidos:', data);
+        this.medicoes = data;
+      },
+      error: (err) => {
+        console.error('❌ Erro ao listar:', err);
+      }
     });
   }
 
-  // ========== Dica pós-medição ==========
   obterDica(sistolica: number, diastolica: number): string {
     if (sistolica >= 140 || diastolica >= 90) {
       return '🚨 Pressão alta! Descanse, eleve as pernas e beba água. Evite esforços. Consulte um médico.';
@@ -159,7 +161,6 @@ export class MedicoesComponent implements OnInit {
     }
   }
 
-  // ========== Funções de classificação individual ==========
   getStatus(medicao: any): string {
     const s = medicao.sistolica;
     const d = medicao.diastolica;

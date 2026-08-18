@@ -8,12 +8,19 @@ import { MedicaoService } from '../../core/services/medicao.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: 'Segoe UI', sans-serif;">
+    <div class="container" style="max-width: 800px; margin: 0 auto; padding: 20px; font-family: 'Segoe UI', sans-serif;">
+      <!-- Toggle de tema escuro -->
+      <div style="display: flex; justify-content: flex-end; padding: 10px 0;">
+        <button (click)="toggleTheme()" class="btn" style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s;">
+          {{ isDark ? '🌞 Modo Claro' : '🌙 Modo Escuro' }}
+        </button>
+      </div>
+
       <h1 style="text-align: center;">🚀 Bem-vindo ao Dashboard</h1>
-      <p style="text-align: center; color: #555;">Acompanhamento de Pressão Arterial</p>
+      <p style="text-align: center; color: var(--text-muted, #555);">Acompanhamento de Pressão Arterial</p>
 
       <!-- Card de status -->
-      <div *ngIf="dashboard" style="margin: 30px 0; padding: 25px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"
+      <div *ngIf="dashboard" class="card" style="margin: 30px 0; padding: 25px; border-radius: 16px; text-align: center; box-shadow: 0 4px 16px var(--shadow-color, rgba(0,0,0,0.1));"
            [style.background]="getCorFundo()" [style.color]="getCorTexto()">
         <div style="font-size: 48px; margin-bottom: 8px;">{{ getIcone() }}</div>
         <h2 style="margin: 0; font-size: 28px; font-weight: 700;">{{ dashboard.statusGeral }}</h2>
@@ -26,16 +33,19 @@ import { MedicaoService } from '../../core/services/medicao.service';
         </div>
       </div>
 
-      <!-- Botões com espaçamento de 30px -->
+      <!-- Botões de navegação -->
       <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px; flex-wrap: wrap;">
-        <a routerLink="/medicoes" style="display: inline-block; padding: 12px 24px; background: #007bff; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+        <a routerLink="/medicoes" class="btn btn-primary" style="display: inline-block; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; transition: 0.3s;">
           ➕ Ir para Minhas Medições
         </a>
-        <a routerLink="/grafico" style="display: inline-block; padding: 12px 24px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+        <a routerLink="/grafico" class="btn btn-success" style="display: inline-block; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; transition: 0.3s;">
           📈 Ver Gráficos
         </a>
-        <a routerLink="/medicamentos" style="display: inline-block; padding: 12px 24px; background: #ffc107; color: #333; text-decoration: none; border-radius: 8px; font-weight: 600;">
+        <a routerLink="/medicamentos" class="btn btn-warning" style="display: inline-block; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; transition: 0.3s;">
           💊 Medicamentos
+        </a>
+        <a routerLink="/relatorio" class="btn" style="display: inline-block; padding: 12px 24px; background: #17a2b8; color: white; border-radius: 8px; font-weight: 600; text-decoration: none; transition: 0.3s;">
+          📄 Relatórios
         </a>
       </div>
     </div>
@@ -44,6 +54,7 @@ import { MedicaoService } from '../../core/services/medicao.service';
 })
 export class DashboardComponent implements OnInit {
   dashboard: any = null;
+  isDark: boolean = false;
 
   constructor(
     private medicaoService: MedicaoService,
@@ -51,7 +62,20 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Carrega a preferência do tema do localStorage (se houver)
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      this.isDark = true;
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
     this.carregarDashboard();
+  }
+
+  toggleTheme() {
+    this.isDark = !this.isDark;
+    const theme = this.isDark ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme); // Salva a preferência
   }
 
   carregarDashboard() {

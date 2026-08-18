@@ -21,9 +21,13 @@ import com.vitacontrol.demo.repository.UsuarioRepository;
 import com.vitacontrol.demo.repository.CodigoRecuperacaoRepository;
 import com.vitacontrol.demo.service.EmailService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${cors.allowed.origin}")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -67,7 +71,7 @@ public class AuthController {
 
     // ==================== CADASTRO ====================
     @PostMapping("/register")
-    public ResponseEntity<?> registrar(@RequestBody RegistoRequest request) {
+    public ResponseEntity<?> registrar(@Valid @RequestBody RegistoRequest request) {
         if (usuarioRepository.findByUsername(request.getUsername()).isPresent()) {
             return ResponseEntity.status(409).body(Map.of("mensagem", "E-mail já cadastrado."));
         }
@@ -176,8 +180,14 @@ class LoginRequest {
 
 class RegistoRequest {
     private String username;
+
+    @NotBlank(message = "Senha é obrigatória")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$",
+             message = "A senha deve ter no mínimo 8 caracteres, incluindo letras maiúsculas, minúsculas e números.")
     private String password;
+
     private String nome;
+
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
     public String getPassword() { return password; }
